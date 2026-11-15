@@ -1,13 +1,17 @@
 <script>
 window.addEventListener('load', () => {
+  const fontsReady = document.fonts ? Promise.all(['400', '600', '800'].map(w => document.fonts.load(w + ' 44px Vazirmatn', 'آب'))).catch(() => {}) : Promise.resolve();
+  Promise.race([fontsReady, new Promise(r => setTimeout(r, 2500))]).then(start);
+});
+function start() {
   try { init(); }
   catch (e) {
     document.getElementById('loading').style.display = 'none';
     const el = document.getElementById('err'); el.style.display = 'flex';
-    el.textContent = '3D could not start: ' + (e && e.message ? e.message : e) + '\n\nTry a recent Chrome, Edge, Firefox or Safari with WebGL enabled.';
+    el.textContent = 'نمای سه‌بعدی اجرا نشد: ' + (e && e.message ? e.message : e) + '\n\nلطفاً نسخه جدید Chrome، Edge، Firefox یا Safari را با WebGL فعال امتحان کنید.';
     console.error(e);
   }
-});
+}
 </script>
 </body>
 </html>

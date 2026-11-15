@@ -1,23 +1,27 @@
-# Industrial entrance gate: 3D concepts
+<div dir="rtl">
 
-Interactive 3D concepts for a **6.0 m × 3.0 m** industrial entrance gate. **All steel comes from stock only:**
-L40×40×4 angle, 80×30 box and 30×30 box. Only the hardware is bought: wheels or rollers, hinges, locks, concrete and paint.
+# درب ورودی صنعتی: طرح‌های سه‌بعدی
 
-**▶ Open the 3D viewer: https://saeidskyboy.github.io/company-gate-3d/**
+طرح‌های سه‌بعدی و تعاملی برای یک درب ورودی صنعتی با ابعاد **6.0 m × 3.0 m**. **تمام آهن‌آلات فقط از موجودی فعلی تأمین می‌شود:**
+نبشی L40×40×4، قوطی 80×30 و قوطی 30×30. فقط یراق‌آلات خریداری می‌شود: چرخ یا غلتک، لولا، قفل، بتن و رنگ.
 
-| | Type | Level | Design |
+**▶ باز کردن نمایشگر سه‌بعدی: https://saeidskyboy.github.io/company-gate-3d/**
+
+| | نوع | سطح | طرح |
 |---|---|---|---|
-| A | Sliding | 💰 Budget | Scalloped 30×30 pickets, diamond band, ladder portals |
-| B | Sliding | ✨ Modern | Trackless cantilever, 80×30 slats with diagonal accent stripes |
-| C | Sliding | 🎨 Decorative | 30×30 diamond lattice, medallion row, toothed crown |
-| D | Swing | 💰 Budget | Arched pickets, diamond band, lattice pylons (L40 + 30×30) |
-| E | Swing | ✨ Modern | Vertical bars plus a front layer of 80×30 “mountain skyline” slats, twin pylons |
-| F | Swing | 🎨 Decorative | Sunrise rays and rings, X-laced pylons |
+| A | ریلی | 💰 اقتصادی | نرده‌های 30×30 با سرهای موجی، نوار لوزی، قاب‌های نردبانی |
+| B | ریلی | ✨ مدرن | ریلی معلق (بدون ریل زمینی)، تیغه‌های افقی 80×30 با نوارهای تأکیدی مورب |
+| C | ریلی | 🎨 تزئینی | شبکه لوزی 30×30، ردیف مدال‌ها، تاج دندانه‌دار |
+| D | لولایی | 💰 اقتصادی | نرده‌های قوسی، نوار لوزی، ستون‌های مشبک (L40 + 30×30) |
+| E | لولایی | ✨ مدرن | میله‌های عمودی با لایه جلویی تیغه‌های 80×30 به شکل «خط افق کوهستان»، ستون‌های دوقلو |
+| F | لولایی | 🎨 تزئینی | پرتوها و حلقه‌های «طلوع خورشید»، ستون‌های مشبک با بست ضربدری |
 
-Drag to rotate, scroll to zoom, and click any part to see what it is made of. You can open and close the gate, compare all 6, switch on night mode and change the colours.
+برای چرخاندن بکشید، برای بزرگ‌نمایی اسکرول کنید و روی هر قطعه کلیک کنید تا ببینید از چه ساخته شده است. می‌توانید درب را باز و بسته کنید، هر 6 طرح را مقایسه کنید، حالت شب را روشن کنید و رنگ‌ها را تغییر دهید.
 
-Deep links: `#opt=B`, `#all=1`, `#opt=D&open=1&view=front`, `#night=1`.
+لینک‌های مستقیم: `#opt=B`، `#all=1`، `#opt=D&open=1&view=front`، `#night=1`.
 
-> Concept stage. The contractor or a structural engineer must confirm member sizes, posts, foundations and hardware before building.
+> مرحله طراحی اولیه. پیش از ساخت، پیمانکار یا مهندس سازه باید اندازه اعضا، ستون‌ها، فونداسیون و یراق‌آلات را تأیید کند.
 
-`index.html` is a single self-contained file that also works offline. It is assembled from `src/` by `./build.sh`. It includes three.js r147 (MIT).
+فایل `index.html` یک فایل مستقل است که بدون اینترنت هم کار می‌کند (قلم Vazirmatn آنلاین بارگذاری می‌شود و در حالت آفلاین از قلم جایگزین استفاده می‌شود). این فایل با `./build.sh` از پوشه `src/` ساخته می‌شود و شامل three.js r147 (MIT) است.
+
+</div>

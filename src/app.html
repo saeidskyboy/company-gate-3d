@@ -1,158 +1,158 @@
 <script>
 /* ================= data ================= */
 const SEC = {
-  B80: { label: 'Box 80×30', spec: 'Rectangular tube 80×30×2 (your “8×3”)', kg: 3.33, sy: 80, sz: 30 },
-  B30: { label: 'Box 30×30', spec: 'Square tube 30×30×2 (your “3×3”)', kg: 1.76, sy: 30, sz: 30 },
-  L40: { label: 'Angle L40', spec: 'Equal angle L40×40×4 (your “L no. 4”)', kg: 2.42, L: true }
+  B80: { label: 'قوطی 80×30', spec: 'قوطی مستطیلی 80×30×2 (همان «8×3» شما)', kg: 3.33, sy: 80, sz: 30 },
+  B30: { label: 'قوطی 30×30', spec: 'قوطی مربعی 30×30×2 (همان «3×3» شما)', kg: 1.76, sy: 30, sz: 30 },
+  L40: { label: 'نبشی L40', spec: 'نبشی بال‌مساوی L40×40×4 (همان «نبشی نمره 4» شما)', kg: 2.42, L: true }
 };
-const PAINTS = [['RAL 7016 Anthracite', '#383e42'], ['RAL 9005 Black', '#18191b'], ['RAL 7035 Light grey', '#c5c7c4'], ['RAL 6005 Moss green', '#1f4a38'], ['RAL 5010 Gentian blue', '#1a4a85'], ['Hot-dip galvanised', '#a9aeb1']];
-const ACCENTS = [['RAL 2004 Orange', '#e75b12'], ['RAL 1023 Traffic yellow', '#f0ca00'], ['Corten look', '#8a4a2b'], ['RAL 9006 Silver', '#a5a8a6'], ['RAL 3020 Red', '#c1121c'], ['RAL 7016 Anthracite', '#383e42']];
-const BADGE = { eco: ['💰 Budget', 'Budget'], pro: ['✨ Modern', 'Modern'], deco: ['🎨 Decorative', 'Decorative'] };
+const PAINTS = [['RAL 7016 طوسی آنتراسیت', '#383e42'], ['RAL 9005 مشکی', '#18191b'], ['RAL 7035 طوسی روشن', '#c5c7c4'], ['RAL 6005 سبز خزه‌ای', '#1f4a38'], ['RAL 5010 آبی تیره', '#1a4a85'], ['گالوانیزه گرم', '#a9aeb1']];
+const ACCENTS = [['RAL 2004 نارنجی', '#e75b12'], ['RAL 1023 زرد ترافیکی', '#f0ca00'], ['ظاهر کورتن (زنگ‌زده)', '#8a4a2b'], ['RAL 9006 نقره‌ای', '#a5a8a6'], ['RAL 3020 قرمز', '#c1121c'], ['RAL 7016 طوسی آنتراسیت', '#383e42']];
+const BADGE = { eco: ['💰 اقتصادی', 'اقتصادی'], pro: ['✨ مدرن', 'مدرن'], deco: ['🎨 تزئینی', 'تزئینی'] };
 
 const P = (name, made, note, leaf = false) => ({ name, made, note, leaf });
-const HW_SLIDE = ['2 × V-groove wheels Ø120–160 with sealed bearings (rating see “Leaf weight” ×1.5)', '4 × nylon guide rollers Ø60 on M12 bolts', 'Rubber end-stop buffer, sliding-gate lockbox + padlock', 'Concrete C25/30 for the track strip and post footings, M12 anchors', 'Zinc-rich primer + 2 coats industrial enamel (or hot-dip galvanising)', 'Optional later: M4 rack + sliding motor'];
-const HW_SWING = ['4 × heavy weld-on hinges Ø40 (bearing type), 2 per leaf', 'Drop bolt Ø16 + ground socket, centre stop, double-gate lockbox', '2 × hold-open hooks (wind)', 'Concrete C25/30 for the post footings', 'Zinc-rich primer + 2 coats industrial enamel (or hot-dip galvanising)', 'Optional later: 2 arm-type swing motors'];
+const HW_SLIDE = ['2 عدد چرخ شیار V با قطر Ø120–160 و بلبرینگ آب‌بندی‌شده (ظرفیت: «وزن لنگه» × 1.5)', '4 عدد غلتک راهنمای نایلونی Ø60 روی پیچ M12', 'ضربه‌گیر لاستیکی انتهای مسیر، جعبه قفل درب ریلی + قفل آویز', 'بتن C25/30 برای نوار ریل و فونداسیون ستون‌ها، بولت مهاری M12', 'ضدزنگ غنی از روی + 2 لایه رنگ روغنی صنعتی (یا گالوانیزه گرم)', 'اختیاری در آینده: شانه دنده M4 + موتور درب ریلی'];
+const HW_SWING = ['4 عدد لولای سنگین جوشی Ø40 (بلبرینگی)، 2 عدد برای هر لنگه', 'کلون زمینی Ø16 + کاسه کف، استاپر وسط، جعبه قفل درب دولنگه', '2 عدد قلاب نگهدارنده لنگه در حالت باز (برای باد)', 'بتن C25/30 برای فونداسیون ستون‌ها', 'ضدزنگ غنی از روی + 2 لایه رنگ روغنی صنعتی (یا گالوانیزه گرم)', 'اختیاری در آینده: 2 عدد موتور بازویی درب لولایی'];
 const SLIDE_PARTS = {
-  wheels: P('V-groove wheels', 'Buy: cast steel, sealed bearings', 'Bolted in brackets under the bottom rail, 450 mm from each end.'),
-  rail: P('Ground track', 'L40 angle turned apex-up (your stock)', 'The V-wheels ride on the apex. Welded to anchors in a 300 mm wide concrete strip. Must be straight and level.'),
-  rollers: P('Top guide rollers', 'Buy: nylon rollers Ø60', 'Roll against the top rail and keep the leaf upright.'),
-  stop: P('End stop post', '80×30 box + rubber buffer', 'Stops the leaf at the fully open position.'),
-  lock: P('Lockbox', 'Buy: weld-on sliding-gate lockbox', 'Locks into the keeper on the catch post.'),
-  found: P('Concrete', 'C25/30 concrete', 'Track strip 300 wide × 300 deep. Post footings 600×600×1000 deep; the posts are cast in, so no base plates are needed.')
+  wheels: P('چرخ‌های شیار V', 'خریدنی: فولاد ریخته‌گری، بلبرینگ آب‌بندی‌شده', 'داخل براکت زیر افقی پایینی پیچ می‌شوند، 450 mm از هر سر لنگه.'),
+  rail: P('ریل زمینی', 'نبشی L40 که نوک آن رو به بالا قرار می‌گیرد (از موجودی شما)', 'چرخ‌های V روی نوک نبشی حرکت می‌کنند. ریل به بولت‌های مهاری داخل یک نوار بتنی به عرض 300 mm جوش می‌شود و باید کاملاً صاف و تراز باشد.'),
+  rollers: P('غلتک‌های راهنمای بالا', 'خریدنی: غلتک نایلونی Ø60', 'روی افقی بالایی می‌غلتند و لنگه را عمود نگه می‌دارند.'),
+  stop: P('ستون توقف انتهای مسیر', 'قوطی 80×30 + ضربه‌گیر لاستیکی', 'لنگه را در حالت کاملاً باز متوقف می‌کند.'),
+  lock: P('جعبه قفل', 'خریدنی: جعبه قفل جوشی مخصوص درب ریلی', 'در زبانه‌گیرِ روی ستون قفل‌گیر قفل می‌شود.'),
+  found: P('بتن', 'بتن C25/30', 'نوار ریل به عرض 300 و عمق 300. فونداسیون ستون‌ها 600×600 با عمق 1000؛ ستون‌ها داخل بتن ریخته می‌شوند، پس صفحه‌ستون (بیس‌پلیت) لازم نیست.')
 };
 const SWING_PARTS = {
-  hinge: P('Heavy hinges', 'Buy: weld-on bearing hinges Ø40', '2 per leaf, about 2.2 m apart.'),
-  drop: P('Drop bolt + centre stop', 'Buy: Ø16 drop bolt, ground socket', 'Holds the passive leaf in place.', true),
-  lock: P('Lockbox', 'Buy: double-gate lockbox', 'Joins the two leaves in the middle.', true),
-  strut: P('Anti-sag strut', 'L40 angle, inside face', 'Runs from the bottom hinge corner to the top free corner. Working in compression, it holds the free end of the leaf up.', true),
-  found: P('Footing', 'C25/30 concrete', '1.0 × 1.0 × 1.2 m deep per post. The post legs are cast in 800 mm, so no base plates are needed.')
+  hinge: P('لولاهای سنگین', 'خریدنی: لولای جوشی بلبرینگی Ø40', '2 عدد برای هر لنگه، با فاصله حدود 2.2 m از هم.'),
+  drop: P('کلون زمینی + استاپر وسط', 'خریدنی: کلون Ø16، کاسه کف', 'لنگه ثابت را سر جایش نگه می‌دارد.', true),
+  lock: P('جعبه قفل', 'خریدنی: جعبه قفل درب دولنگه', 'دو لنگه را در وسط به هم قفل می‌کند.', true),
+  strut: P('شمشیری ضد افتادگی', 'نبشی L40، سمت داخل', 'از گوشه پایینِ سمت لولا تا گوشه بالای سمت آزاد کشیده می‌شود. چون در فشار کار می‌کند، سر آزاد لنگه را بالا نگه می‌دارد و از افتادگی آن جلوگیری می‌کند.', true),
+  found: P('فونداسیون', 'بتن C25/30', 'برای هر ستون 1.0 × 1.0 با عمق 1.2 m. پایه‌های ستون 800 mm داخل بتن ریخته می‌شوند، پس صفحه‌ستون لازم نیست.')
 };
 const OPTIONS = [
   {
-    id: 'A', kind: 'slide', budget: 'eco', short: 'Scalloped pickets + diamond band',
-    title: 'Sliding · Budget: scalloped pickets with a diamond band',
-    tagline: 'A picket gate that is not plain: the picket tops follow three scallops, a chain of 30×30 diamonds runs across the middle and the posts are laced ladders.',
+    id: 'A', kind: 'slide', budget: 'eco', short: 'نرده سرنیزه‌ای موجی + نوار لوزی',
+    title: 'ریلی · اقتصادی: نرده‌های سرنیزه‌ای موجی با نوار لوزی',
+    tagline: 'یک درب نرده‌ای که ساده و معمولی نیست: سر نرده‌ها سه قوس موجی می‌سازند، زنجیره‌ای از لوزی‌های قوطی 30×30 از وسط درب می‌گذرد و ستون‌ها نردبانی و خرپایی هستند.',
     paint: '#1f4a38', accent: '#f0ca00', center: [-300, 1400, 0], span: 16500,
     detail: { p: [-1300, 900, 2600], t: [-350, 300, 0] }, travel: 6160,
-    how: 'One 6.50 m leaf runs on two V-groove wheels along an L40 angle turned apex-up in a concrete strip. A guide portal at the opening holds the top of the leaf with nylon rollers. When closed, the leaf end enters a catch portal.',
-    structure: ['Leaf frame: 80×30 bottom rail and stiles; three flat 80×30 rails at 1000, 1400 and 2500 with punched holes for the pickets', 'Two 80×30 bay posts split the leaf into 3 bays. In each bay the picket tops follow a scallop: 3.00 m at the bay posts, 2.78 m in the middle', 'A 30×30 scallop rail, cut in short straight pieces, follows the tops 150 mm below the points', 'Diamond band between 1000 and 1400: a chain of 30×30 diamonds welded to the street face of the pickets (accent colour)', 'Picket points: each 30×30 is cut with four 45° notches, hammered closed and welded – no bought caps', 'Guide and catch portals: two ladder posts each (2 × 80×30 with 30×30 zig-zag lacing), cast 800 mm into the footing'],
+    how: 'یک لنگه 6.50 m روی دو چرخ شیار V حرکت می‌کند؛ ریل آن یک نبشی L40 است که نوکش رو به بالا داخل یک نوار بتنی کار گذاشته شده. یک قاب راهنما کنار دهانه، بالای لنگه را با غلتک‌های نایلونی نگه می‌دارد. در حالت بسته، سر لنگه وارد قاب قفل‌گیر می‌شود.',
+    structure: ['قاب لنگه: افقی پایینی و عمودی‌های کناری از قوطی 80×30؛ سه افقی خوابیده 80×30 در ارتفاع 1000، 1400 و 2500 که برای عبور نرده‌ها سوراخ‌کاری (پانچ) شده‌اند', 'دو ستون میانی 80×30 لنگه را به 3 دهانه تقسیم می‌کنند. در هر دهانه سر نرده‌ها یک قوس می‌سازد: 3.00 m کنار ستون‌های میانی و 2.78 m در وسط', 'یک افقی قوسی از قوطی 30×30، ساخته‌شده از قطعات کوتاه و صاف، 150 mm پایین‌تر از سرنیزه‌ها قوس را دنبال می‌کند', 'نوار لوزی بین 1000 و 1400: زنجیره‌ای از لوزی‌های قوطی 30×30 که روی سطح رو به خیابان نرده‌ها جوش می‌شود (رنگ تأکیدی)', 'سرنیزه‌ها: سر هر قوطی 30×30 با چهار برش 45° بریده، با چکش جمع و جوش می‌شود – بدون خرید سرنیزه آماده', 'قاب‌های راهنما و قفل‌گیر: هر کدام دو ستون نردبانی (2 × 80×30 با بست‌بندی زیگزاگ 30×30) که 800 mm داخل فونداسیون ریخته می‌شوند'],
     buy: HW_SLIDE,
-    space: 'At least 6.7 m of flat, level and clear space to the left of the opening (inside the fence).',
-    pros: ['Cheapest: 100 % your steel, only wheels, rollers and the lock are bought', 'Familiar build, any workshop can weld it', 'Picket gaps ~90 mm (< 100 mm, climb- and squeeze-resistant)', 'See-through: low wind load'],
-    cons: ['Ground track must be kept clean of gravel and ice', 'Trucks drive over the rail', 'Scallop and diamonds add ~1 day of welding over a plain picket gate'],
+    space: 'حداقل 6.7 m فضای صاف، تراز و خالی در سمت چپ دهانه (داخل حصار).',
+    pros: ['ارزان‌ترین گزینه: 100 % از آهن‌آلات خودتان؛ فقط چرخ، غلتک و قفل خریداری می‌شود', 'ساخت آشنا؛ هر کارگاهی می‌تواند آن را جوشکاری کند', 'فاصله نرده‌ها حدود 90 mm (کمتر از 100 mm؛ مقاوم در برابر بالا رفتن و رد شدن)', 'پشت درب دیده می‌شود؛ بار باد کم'],
+    cons: ['ریل زمینی باید همیشه از سنگریزه و یخ پاک نگه داشته شود', 'کامیون‌ها از روی ریل عبور می‌کنند', 'قوس‌ها و لوزی‌ها نسبت به یک درب نرده‌ای ساده، حدود 1 روز جوشکاری بیشتر می‌برند'],
     parts: Object.assign({
-      frame: P('Leaf frame and rails', '80×30 box', 'Bottom rail upright (80 tall, carries the wheels). The rails at 1000, 1400 and 2500 lie flat with punched holes for the pickets.', true),
-      bay: P('Bay posts', '80×30 box', 'Split the leaf into 3 bays of ~2.1 m and give the scallops their high points.', true),
-      pickets: P('Pickets', '30×30 box, pinched points', '~121 mm pitch, ~90 mm gap. The height follows the scallop curve.', true),
-      scallop: P('Scallop rail', '30×30 box, short straight pieces', 'Follows the picket tops 150 mm below the points. It ties the tops together and makes the curve visible.', true),
-      band: P('Diamond band', '30×30 box, accent colour', 'Chain of diamonds (≈480 × 380) welded to the street face of the pickets between the 1000 and 1400 rails.', true),
-      brace: P('Diagonal braces', 'L40 angle, inside face', 'Keep the 6.5 m leaf square and stop it sagging between the wheels.', true),
-      guide: P('Guide portal', '2 ladder posts: 2 × 80×30 + 30×30 zig-zag lacing each, 80×30 top tie', 'Holds the top of the leaf upright with nylon rollers. Cast 800 mm into the footing.'),
-      catch: P('Catch portal', '2 ladder posts + 80×30 tie', 'The leaf end slides in between when closed. The lock keeper is mounted here.')
+      frame: P('قاب و افقی‌های لنگه', 'قوطی 80×30', 'افقی پایینی ایستاده نصب می‌شود (ارتفاع 80؛ چرخ‌ها به آن وصل‌اند). افقی‌های 1000، 1400 و 2500 خوابیده‌اند و برای عبور نرده‌ها سوراخ‌کاری شده‌اند.', true),
+      bay: P('ستون‌های میانی لنگه', 'قوطی 80×30', 'لنگه را به 3 دهانه حدوداً 2.1 m تقسیم می‌کنند و بلندترین نقطه قوس‌ها را می‌سازند.', true),
+      pickets: P('نرده‌ها', 'قوطی 30×30 با سرنیزه جمع‌شده', 'فاصله محور به محور حدود 121 mm و فاصله خالی حدود 90 mm. ارتفاع نرده‌ها منحنی قوس را دنبال می‌کند.', true),
+      scallop: P('افقی قوسی', 'قوطی 30×30، قطعات کوتاه و صاف', '150 mm پایین‌تر از سرنیزه‌ها، سر نرده‌ها را دنبال می‌کند. سر نرده‌ها را به هم می‌بندد و قوس را نمایان می‌کند.', true),
+      band: P('نوار لوزی', 'قوطی 30×30، رنگ تأکیدی', 'زنجیره‌ای از لوزی‌ها (حدود 480 × 380) که بین افقی‌های 1000 و 1400 روی سطح رو به خیابان نرده‌ها جوش می‌شود.', true),
+      brace: P('شمشیری‌های قطری', 'نبشی L40، سمت داخل', 'لنگه 6.5 m را گونیا نگه می‌دارند و از افتادگی آن بین چرخ‌ها جلوگیری می‌کنند.', true),
+      guide: P('قاب راهنما', '2 ستون نردبانی: هر کدام 2 × 80×30 + بست‌بندی زیگزاگ 30×30، رابط بالایی 80×30', 'بالای لنگه را با غلتک‌های نایلونی عمود نگه می‌دارد. 800 mm داخل فونداسیون ریخته می‌شود.'),
+      catch: P('قاب قفل‌گیر', '2 ستون نردبانی + رابط 80×30', 'در حالت بسته، سر لنگه بین آن‌ها قرار می‌گیرد. زبانه‌گیر قفل اینجا نصب می‌شود.')
     }, SLIDE_PARTS)
   },
   {
-    id: 'B', kind: 'slide', budget: 'pro', short: 'Slats cut by a diagonal stripe',
-    title: 'Sliding · Modern: horizontal slats with a diagonal stripe',
-    tagline: 'Clean horizontal 80×30 slats, cut by a bold diagonal stripe of accent-coloured 30×30 verticals and a thin echo stripe. Posts are 4 × 80×30 welded into a pinwheel column.',
+    id: 'B', kind: 'slide', budget: 'pro', short: 'تیغه‌های افقی با نوار مورب',
+    title: 'ریلی · مدرن: تیغه‌های افقی با نوار مورب',
+    tagline: 'تیغه‌های افقی تمیز از قوطی 80×30 که یک نوار مورب پررنگ از میله‌های عمودی 30×30 (رنگ تأکیدی) و یک نوار باریکِ همراه آن‌ها را قطع می‌کند. ستون‌ها از 4 قوطی 80×30 به شکل ستون فرفره‌ای جوش شده‌اند.',
     paint: '#383e42', accent: '#e75b12', center: [-300, 1400, 0], span: 16500,
     detail: { p: [-1300, 900, 2600], t: [-350, 300, 0] }, travel: 6160,
-    how: 'Same running gear as A (L40 ground track, 2 V-wheels, guide rollers), so it is simple and reliable. The look comes from the infill: horizontal slats, interrupted by two slanted stripes filled with vertical bars.',
-    structure: ['Leaf frame: 80×30 rails top and bottom, 80×30 stiles', '17 horizontal 80×30 slats (80 face to the street, ~75 mm gap)', 'Wide diagonal stripe (~1.2 m) and a narrow echo stripe: edged with slanted 30×30 and filled with vertical 30×30 at 110 mm pitch, accent colour', 'The slats are cut at the stripe edges and welded to them', 'Hidden on the inside face: two 80×30 verticals and L40 diagonals', 'Posts: “pinwheel” columns – 4 × 80×30 welded around each other into a closed 110×110 square, cast 800 mm into concrete'],
+    how: 'همان سیستم حرکتی گزینه A (ریل زمینی L40، 2 چرخ V، غلتک‌های راهنما)، پس ساده و قابل اعتماد است. زیبایی آن از پرکننده لنگه می‌آید: تیغه‌های افقی که دو نوار مورب پر از میله‌های عمودی آن‌ها را قطع می‌کند.',
+    structure: ['قاب لنگه: افقی‌های بالا و پایین و عمودی‌های کناری از قوطی 80×30', '17 تیغه افقی 80×30 (وجه 80 رو به خیابان، فاصله حدود 75 mm)', 'یک نوار مورب پهن (حدود 1.2 m) و یک نوار باریکِ همراه: لبه‌ها از قوطی 30×30 مورب و داخلشان میله‌های عمودی 30×30 با فاصله محوری 110 mm، با رنگ تأکیدی', 'تیغه‌ها در لبه نوارها بریده و به آن‌ها جوش می‌شوند', 'پنهان در سمت داخل: دو عمودی 80×30 و شمشیری‌های قطری L40', 'ستون‌ها: ستون‌های «فرفره‌ای» – 4 قوطی 80×30 که دور هم جوش می‌شوند و یک مقطع بسته 110×110 می‌سازند؛ 800 mm داخل بتن ریخته می‌شوند'],
     buy: HW_SLIDE,
-    space: 'At least 6.7 m of flat, level and clear space to the left of the opening.',
-    pros: ['The most modern look, still 100 % your steel', 'Strong graphic stripe can carry the company colour', 'Pinwheel columns look solid and clean (no visible lacing)', 'Same simple running gear as A'],
-    cons: ['Heaviest leaf (see weight), needs heavy-duty wheels ≥ 600 kg each', 'Slats catch more wind than pickets', 'Horizontal slats can be climbed like a ladder', 'Many angled cuts at the stripe edges'],
+    space: 'حداقل 6.7 m فضای صاف، تراز و خالی در سمت چپ دهانه.',
+    pros: ['مدرن‌ترین ظاهر، باز هم 100 % از آهن‌آلات خودتان', 'نوار گرافیکی پررنگ می‌تواند رنگ سازمانی شرکت را داشته باشد', 'ستون‌های فرفره‌ای محکم و تمیز به نظر می‌رسند (بدون بست‌بندی نمایان)', 'همان سیستم حرکتی ساده گزینه A'],
+    cons: ['سنگین‌ترین لنگه (وزن را ببینید)؛ به چرخ‌های سنگین با ظرفیت حداقل 600 kg برای هر چرخ نیاز دارد', 'تیغه‌ها بیشتر از نرده‌ها باد می‌گیرند', 'از تیغه‌های افقی مثل نردبان می‌شود بالا رفت', 'برش‌های زاویه‌دار زیاد در لبه نوارها'],
     parts: Object.assign({
-      frame: P('Leaf frame', '80×30 box', 'Outer frame of the 6.50 m leaf.', true),
-      slats: P('Horizontal slats', '80×30 box, 80 face visible', '~75 mm gaps. Cut at the stripe edges and welded to the slanted edge bars.', true),
-      stripe: P('Diagonal stripes', '30×30 box, accent colour', 'Slanted 30×30 edges with vertical 30×30 infill at 110 mm pitch (80 mm gaps).', true),
-      hidden: P('Hidden verticals + bracing', '80×30 box + L40 angle, inside face', 'Not visible from the street. They stop the slats sagging and keep the leaf square.', true),
-      guide: P('Guide columns', '2 pinwheel columns (4 × 80×30 each) + 80×30 top tie', 'A 110×110 closed column made only from your 80×30. Tops closed with 80×30 offcuts. Cast 800 mm into the footing.'),
-      catch: P('Catch columns', '2 pinwheel columns + 80×30 tie', 'The leaf end slides in between when closed.')
+      frame: P('قاب لنگه', 'قوطی 80×30', 'قاب بیرونی لنگه 6.50 m.', true),
+      slats: P('تیغه‌های افقی', 'قوطی 80×30، وجه 80 نمایان', 'فاصله حدود 75 mm. در لبه نوارها بریده و به میله‌های مورب لبه جوش می‌شوند.', true),
+      stripe: P('نوارهای مورب', 'قوطی 30×30، رنگ تأکیدی', 'لبه‌های مورب 30×30 با پرکننده عمودی 30×30 به فاصله محوری 110 mm (فاصله خالی 80 mm).', true),
+      hidden: P('عمودی‌های پنهان + مهاربندی', 'قوطی 80×30 + نبشی L40، سمت داخل', 'از خیابان دیده نمی‌شوند. از افتادگی تیغه‌ها جلوگیری می‌کنند و لنگه را گونیا نگه می‌دارند.', true),
+      guide: P('ستون‌های راهنما', '2 ستون فرفره‌ای (هر کدام 4 × 80×30) + رابط بالایی 80×30', 'ستون بسته 110×110 که فقط از قوطی 80×30 شما ساخته می‌شود. سر ستون‌ها با تکه‌های اضافه 80×30 بسته می‌شود. 800 mm داخل فونداسیون ریخته می‌شود.'),
+      catch: P('ستون‌های قفل‌گیر', '2 ستون فرفره‌ای + رابط 80×30', 'در حالت بسته، سر لنگه بین آن‌ها قرار می‌گیرد.')
     }, SLIDE_PARTS)
   },
   {
-    id: 'C', kind: 'slide', budget: 'deco', short: 'Diamond lattice + crown',
-    title: 'Sliding · Decorative: diamond lattice with a toothed crown',
-    tagline: 'The whole leaf is a woven-looking lattice of 30×30 diamonds with a row of inner diamonds, topped by a crown of teeth and spikes.',
+    id: 'C', kind: 'slide', budget: 'deco', short: 'شبکه لوزی + تاج دندانه‌دار',
+    title: 'ریلی · تزئینی: شبکه لوزی با تاج دندانه‌دار',
+    tagline: 'کل لنگه یک شبکه لوزیِ بافته‌شده از قوطی 30×30 است با یک ردیف لوزی‌های داخلی، و بالای آن تاجی از دندانه‌ها و سرنیزه‌ها.',
     paint: '#1a4a85', accent: '#f0ca00', center: [-300, 1400, 0], span: 16500,
     detail: { p: [-1300, 2400, 2600], t: [-350, 2000, 0] }, travel: 6160,
-    how: 'Same running gear as A (L40 ground track, 2 V-wheels, guide rollers). The diamond lattice also works as the bracing, so no extra diagonals are needed.',
-    structure: ['Leaf frame: 80×30 bottom rail, top rail at 2760 and stiles', 'Lattice: two families of 30×30 at ±60° (260 mm pitch) – one family continuous, the other cut and welded between', 'Medallion row: a small accent diamond welded inside each diamond at mid-height', 'Crown 2800–3000: accent zig-zag of 30×30 with a pinched 30×30 spike on every peak', 'Ladder portals: 2 × 80×30 with 30×30 X lacing, cast 800 mm into concrete'],
+    how: 'همان سیستم حرکتی گزینه A (ریل زمینی L40، 2 چرخ V، غلتک‌های راهنما). شبکه لوزی خودش نقش مهاربندی را هم دارد، پس شمشیری اضافه لازم نیست.',
+    structure: ['قاب لنگه: افقی پایینی 80×30، افقی بالایی در ارتفاع 2760 و عمودی‌های کناری', 'شبکه: دو دسته قوطی 30×30 با زاویه ±60° (فاصله 260 mm) – یک دسته یکسره، دسته دیگر بریده و بین آن‌ها جوش می‌شود', 'ردیف مدال‌ها: یک لوزی کوچک با رنگ تأکیدی داخل هر لوزیِ ردیف میانی جوش می‌شود', 'تاج 2800 تا 3000: زیگزاگ رنگ تأکیدی از قوطی 30×30 با یک سرنیزه 30×30 روی هر قله', 'قاب‌های نردبانی: 2 × 80×30 با بست‌بندی ضربدری 30×30، 800 mm داخل بتن'],
     buy: HW_SLIDE,
-    space: 'At least 6.7 m of flat, level and clear space to the left of the opening.',
-    pros: ['The most decorative sliding option – “wrought-iron” feel from simple tube', 'Lattice is self-bracing and very stiff', 'Still 100 % your steel', 'See-through, low wind load'],
-    cons: ['Most welding: ~150 cut pieces and ~700 weld joints', 'Diamond openings are ~200 mm wide – hard to climb, but a child could pass', 'Needs a careful fitter to keep the pattern even'],
+    space: 'حداقل 6.7 m فضای صاف، تراز و خالی در سمت چپ دهانه.',
+    pros: ['تزئینی‌ترین گزینه ریلی – حس «فرفورژه» با قوطی ساده', 'شبکه خودمهار و بسیار صلب است', 'باز هم 100 % از آهن‌آلات خودتان', 'پشت درب دیده می‌شود؛ بار باد کم'],
+    cons: ['بیشترین جوشکاری: حدود 150 قطعه برش و حدود 700 نقطه جوش', 'دهانه لوزی‌ها حدود 200 mm است – بالا رفتن سخت است، اما ممکن است یک کودک از آن رد شود', 'برای یکنواخت ماندن طرح، به یک جوشکار دقیق نیاز دارد'],
     parts: Object.assign({
-      frame: P('Leaf frame', '80×30 box', 'Bottom rail upright (carries the wheels), top rail at 2760, stiles.', true),
-      lattice: P('Diamond lattice', '30×30 box', 'Two families at ±60°, 260 mm pitch. Diamonds are ~260 wide × 450 tall.', true),
-      medal: P('Inner diamonds', '30×30 box, accent colour', 'One small diamond in each diamond of the middle row.', true),
-      crown: P('Toothed crown', '30×30 box, accent colour', 'Zig-zag with 240 mm teeth and pinched spikes at 3.0 m – an anti-climb top.', true),
-      guide: P('Guide portal', '2 ladder posts (2 × 80×30 + 30×30 X lacing) + 80×30 tie', 'Holds the top of the leaf with nylon rollers.'),
-      catch: P('Catch portal', '2 ladder posts + 80×30 tie', 'The leaf end slides in between when closed.')
+      frame: P('قاب لنگه', 'قوطی 80×30', 'افقی پایینی ایستاده (چرخ‌ها به آن وصل‌اند)، افقی بالایی در 2760، عمودی‌های کناری.', true),
+      lattice: P('شبکه لوزی', 'قوطی 30×30', 'دو دسته با زاویه ±60° و فاصله 260 mm. هر لوزی حدود 260 عرض × 450 ارتفاع.', true),
+      medal: P('لوزی‌های داخلی', 'قوطی 30×30، رنگ تأکیدی', 'یک لوزی کوچک داخل هر لوزیِ ردیف میانی.', true),
+      crown: P('تاج دندانه‌دار', 'قوطی 30×30، رنگ تأکیدی', 'زیگزاگ با دندانه‌های 240 mm و سرنیزه‌های جمع‌شده در ارتفاع 3.0 m – لبه بالایی ضد بالا رفتن.', true),
+      guide: P('قاب راهنما', '2 ستون نردبانی (2 × 80×30 + بست‌بندی ضربدری 30×30) + رابط 80×30', 'بالای لنگه را با غلتک‌های نایلونی نگه می‌دارد.'),
+      catch: P('قاب قفل‌گیر', '2 ستون نردبانی + رابط 80×30', 'در حالت بسته، سر لنگه بین آن‌ها قرار می‌گیرد.')
     }, SLIDE_PARTS)
   },
   {
-    id: 'D', kind: 'swing', budget: 'eco', short: 'Arched pickets, lattice pylons',
-    title: 'Swing · Budget: arched pickets on lattice pylons',
-    tagline: 'Two leaves whose picket tops rise together into one arch, with an accent diamond band and lattice pylons made from L40 and 30×30.',
+    id: 'D', kind: 'swing', budget: 'eco', short: 'نرده‌های قوسی، ستون‌های مشبک',
+    title: 'لولایی · اقتصادی: نرده‌های قوسی روی ستون‌های مشبک',
+    tagline: 'دو لنگه که سر نرده‌هایشان با هم یک قوس واحد می‌سازد، با یک نوار لوزی در رنگ تأکیدی و ستون‌های مشبک (خرپایی) از نبشی L40 و قوطی 30×30.',
     paint: '#1f4a38', accent: '#f0ca00', center: [3000, 1400, 0], span: 12000,
     detail: { p: [1300, 900, -2200], t: [100, 500, 0] }, travel: 0,
-    how: 'Two 2.94 m leaves open inwards by 90° on two heavy hinges each. A drop bolt and a centre stop hold them closed, and a lockbox joins them.',
-    structure: ['Pylons 300×300: 4 × L40 corner legs with 30×30 battens and zig-zag lacing; pyramid cap of four 30×30 hips', 'An 80×30 hinge column on the inner face of each pylon', 'Leaves: 80×30 frame; flat 80×30 rails at 450, 1950 and 2300 with punched holes for the pickets', 'Picket tops follow one arch across both leaves: 2.70 m at the pylons, 3.00 m in the middle, tied by a 30×30 arch rail', 'Accent diamond band between 1950 and 2300', 'Short 30×30 “dog bars” between the pickets at the bottom (no gaps for animals)'],
+    how: 'دو لنگه 2.94 m، هر کدام روی دو لولای سنگین، 90° به سمت داخل باز می‌شوند. یک کلون زمینی و یک استاپر وسط آن‌ها را بسته نگه می‌دارد و جعبه قفل دو لنگه را به هم قفل می‌کند.',
+    structure: ['ستون‌های 300×300: 4 نبشی L40 در گوشه‌ها با تسمه‌های 30×30 و بست‌بندی زیگزاگ؛ کلاهک هرمی از چهار قوطی 30×30', 'یک ستون لولای 80×30 روی وجه داخلی هر ستون مشبک', 'لنگه‌ها: قاب 80×30؛ افقی‌های خوابیده 80×30 در 450، 1950 و 2300 با سوراخ‌کاری برای عبور نرده‌ها', 'سر نرده‌ها در هر دو لنگه یک قوس واحد می‌سازد: 2.70 m کنار ستون‌ها و 3.00 m در وسط، که با یک افقی قوسی 30×30 به هم بسته می‌شوند', 'نوار لوزی با رنگ تأکیدی بین 1950 و 2300', 'میله‌های کوتاه 30×30 بین نرده‌ها در پایین (بدون فاصله برای عبور حیوانات)'],
     buy: HW_SWING,
-    space: 'A clear, flat 3 m swing area on the inside for each leaf. No side space is needed.',
-    pros: ['Cheapest swing option, even the pylons are your stock', 'The arch makes the entrance look finished and symmetric', 'No runback space or ground track', 'Picket gaps ~90 mm'],
-    cons: ['Needs a clear 3 m arc inside the gate', 'Open leaves catch wind: use the hold-open hooks', 'Lattice pylons take welding time'],
+    space: 'برای هر لنگه یک فضای باز و صاف 3 m در سمت داخل برای چرخش لازم است. فضای کناری لازم نیست.',
+    pros: ['ارزان‌ترین گزینه لولایی؛ حتی ستون‌ها از موجودی خودتان است', 'قوس، ورودی را کامل و قرینه نشان می‌دهد', 'بدون نیاز به فضای کناری یا ریل زمینی', 'فاصله نرده‌ها حدود 90 mm'],
+    cons: ['به یک قوس آزاد 3 m در داخل درب نیاز دارد', 'لنگه‌های باز باد می‌گیرند: از قلاب‌های نگهدارنده استفاده کنید', 'ستون‌های مشبک زمان جوشکاری بیشتری می‌برند'],
     parts: Object.assign({
-      pylon: P('Lattice pylon', '4 × L40 legs, 30×30 battens + lacing, 30×30 hip cap', '300×300 mm, 3.2 m above ground, legs cast 800 mm into a 1.0 m cube footing.'),
-      column: P('Hinge column', '80×30 box on the pylon inner face', 'The hinges are welded here.'),
-      frame: P('Leaf frame and rails', '80×30 box', 'Bottom rail and stiles upright. Rails at 450, 1950 and 2300 lie flat with punched holes for the pickets.', true),
-      pickets: P('Pickets', '30×30 box, pinched points', '~121 mm pitch. The heights follow the arch.', true),
-      arch: P('Arch rail', '30×30 box, short straight pieces', 'Follows the arch 150 mm below the points and ties the picket tops.', true),
-      band: P('Diamond band', '30×30 box, accent colour', 'Diamonds welded to the street face of the pickets between the 1950 and 2300 rails.', true),
-      dog: P('Dog bars', '30×30 box', 'Short bars between the pickets below the 450 rail. They halve the bottom gaps.', true)
+      pylon: P('ستون مشبک', '4 پایه نبشی L40، تسمه و بست‌بندی 30×30، کلاهک 30×30', '300×300 mm، 3.2 m بالاتر از زمین؛ پایه‌ها 800 mm داخل یک فونداسیون مکعبی 1.0 m ریخته می‌شوند.'),
+      column: P('ستون لولا', 'قوطی 80×30 روی وجه داخلی ستون مشبک', 'لولاها به اینجا جوش می‌شوند.'),
+      frame: P('قاب و افقی‌های لنگه', 'قوطی 80×30', 'افقی پایینی و عمودی‌های کناری ایستاده‌اند. افقی‌های 450، 1950 و 2300 خوابیده‌اند و برای عبور نرده‌ها سوراخ‌کاری شده‌اند.', true),
+      pickets: P('نرده‌ها', 'قوطی 30×30 با سرنیزه جمع‌شده', 'فاصله محور به محور حدود 121 mm. ارتفاع‌ها قوس را دنبال می‌کنند.', true),
+      arch: P('افقی قوسی', 'قوطی 30×30، قطعات کوتاه و صاف', '150 mm پایین‌تر از سرنیزه‌ها قوس را دنبال می‌کند و سر نرده‌ها را به هم می‌بندد.', true),
+      band: P('نوار لوزی', 'قوطی 30×30، رنگ تأکیدی', 'لوزی‌هایی که بین افقی‌های 1950 و 2300 روی سطح رو به خیابان نرده‌ها جوش می‌شوند.', true),
+      dog: P('میله‌های ضد عبور حیوانات', 'قوطی 30×30', 'میله‌های کوتاه بین نرده‌ها، پایین‌تر از افقی 450. فاصله‌های پایین را نصف می‌کنند.', true)
     }, SWING_PARTS)
   },
   {
-    id: 'E', kind: 'swing', budget: 'pro', short: 'Mountain skyline, two layers',
-    title: 'Swing · Modern: “skyline” slats over vertical bars',
-    tagline: 'Two layers: a calm background of vertical 30×30 bars, and in front accent 80×30 slats that draw a stepped mountain skyline across both leaves.',
+    id: 'E', kind: 'swing', budget: 'pro', short: 'خط افق کوهستان، دو لایه',
+    title: 'لولایی · مدرن: تیغه‌های «خط افق» روی میله‌های عمودی',
+    tagline: 'دو لایه: یک زمینه آرام از میله‌های عمودی 30×30، و جلوی آن تیغه‌های 80×30 با رنگ تأکیدی که در عرض هر دو لنگه یک خط افق پلکانیِ کوهستان می‌کشند.',
     paint: '#383e42', accent: '#8a4a2b', center: [3000, 1400, 0], span: 12500,
     detail: { p: [1300, 1200, -2400], t: [0, 700, 0] }, travel: 0,
-    how: 'Two 2.94 m leaves open inwards by 90° on heavy hinges. They hang on twin pinwheel pylons: two closed 110×110 columns (each 4 × 80×30) tied together with 30×30 rungs.',
-    structure: ['Leaves: 80×30 frame, vertical 30×30 bars at 110 mm pitch (80 mm gap)', 'Front layer: accent 80×30 slats at 160 mm rows. Their lengths draw a skyline: one high peak in the middle, two lower peaks', 'Hidden on the inside face: L40 anti-sag strut', 'Pylons: two pinwheel columns per side (4 × 80×30 each), 380 mm wide overall, tied with 30×30 rungs; cast 800 mm into concrete, filled with grout'],
+    how: 'دو لنگه 2.94 m روی لولاهای سنگین 90° به سمت داخل باز می‌شوند. لنگه‌ها روی ستون‌های دوقلوی فرفره‌ای نصب‌اند: دو ستون بسته 110×110 (هر کدام 4 × 80×30) که با پله‌های 30×30 به هم بسته شده‌اند.',
+    structure: ['لنگه‌ها: قاب 80×30، میله‌های عمودی 30×30 با فاصله محوری 110 mm (فاصله خالی 80 mm)', 'لایه جلویی: تیغه‌های 80×30 با رنگ تأکیدی در ردیف‌های 160 mm. طول آن‌ها یک خط افق می‌سازد: یک قله بلند در وسط و دو قله کوتاه‌تر در دو طرف', 'پنهان در سمت داخل: شمشیری ضد افتادگی L40', 'ستون‌ها: در هر طرف دو ستون فرفره‌ای (هر کدام 4 × 80×30)، با عرض کل 380 mm، که با پله‌های 30×30 به هم بسته شده‌اند؛ 800 mm داخل بتن ریخته و با گروت پر می‌شوند'],
     buy: HW_SWING,
-    space: 'A clear 3 m swing area on the inside for each leaf.',
-    pros: ['The most modern, “architect” look – still 100 % your steel', 'Two-layer depth gives shadows that change during the day', 'Accent colour can match the company brand', 'Background bars keep gaps at 80 mm'],
-    cons: ['Heavier leaves than D', 'Needs a 3 m swing area', 'The front slats can be used as steps – not for high-security sites'],
+    space: 'برای هر لنگه یک فضای باز 3 m در سمت داخل برای چرخش لازم است.',
+    pros: ['مدرن‌ترین ظاهر، با حس «معماری» – باز هم 100 % از آهن‌آلات خودتان', 'عمق دو لایه سایه‌هایی می‌سازد که در طول روز تغییر می‌کنند', 'رنگ تأکیدی می‌تواند با برند شرکت هماهنگ شود', 'میله‌های زمینه فاصله‌ها را در 80 mm نگه می‌دارند'],
+    cons: ['لنگه‌ها از گزینه D سنگین‌ترند', 'به فضای چرخش 3 m نیاز دارد', 'از تیغه‌های جلویی می‌شود مثل پله بالا رفت – برای سایت‌های با امنیت بالا مناسب نیست'],
     parts: Object.assign({
-      pylon: P('Twin pinwheel pylon', '2 × (4 × 80×30) columns + 30×30 rungs', 'Each column is a closed 110×110 square made from four 80×30. Cast 800 mm in, filled with grout, tops closed with 80×30 offcuts.'),
-      frame: P('Leaf frame', '80×30 box', 'Top and bottom rails and stiles.', true),
-      bars: P('Background bars', '30×30 box', '110 mm pitch, 80 mm gaps.', true),
-      sky: P('Skyline slats', '80×30 box, accent colour', 'Welded to the street face of the bars. Their ends step to draw the mountain outline.', true)
+      pylon: P('ستون دوقلوی فرفره‌ای', '2 ستون (هر کدام 4 × 80×30) + پله‌های 30×30', 'هر ستون یک مقطع بسته 110×110 از چهار قوطی 80×30 است. 800 mm داخل بتن، پرشده با گروت؛ سر ستون‌ها با تکه‌های اضافه 80×30 بسته می‌شود.'),
+      frame: P('قاب لنگه', 'قوطی 80×30', 'افقی‌های بالا و پایین و عمودی‌های کناری.', true),
+      bars: P('میله‌های زمینه', 'قوطی 30×30', 'فاصله محوری 110 mm، فاصله خالی 80 mm.', true),
+      sky: P('تیغه‌های خط افق', 'قوطی 80×30، رنگ تأکیدی', 'روی سطح رو به خیابان میله‌ها جوش می‌شوند. سرهای پلکانی آن‌ها شکل کوهستان را می‌کشد.', true)
     }, SWING_PARTS)
   },
   {
-    id: 'F', kind: 'swing', budget: 'deco', short: '“Sunrise” rays',
-    title: 'Swing · Decorative: “Sunrise” – rays and rings',
-    tagline: 'A rising sun across both leaves: a hub at the bottom centre, straight 30×30 rays fanning out to the frame and three rings in the accent colour.',
+    id: 'F', kind: 'swing', budget: 'deco', short: 'پرتوهای «طلوع خورشید»',
+    title: 'لولایی · تزئینی: «طلوع خورشید» – پرتوها و حلقه‌ها',
+    tagline: 'خورشیدی در حال طلوع در عرض هر دو لنگه: یک مرکز در پایینِ وسط، پرتوهای صاف 30×30 که تا قاب باز می‌شوند، و سه حلقه با رنگ تأکیدی.',
     paint: '#18191b', accent: '#f0ca00', center: [3000, 1400, 0], span: 12000,
     detail: { p: [4300, 900, 2600], t: [3000, 500, 0] }, travel: 0,
-    how: 'Two 2.94 m leaves open inwards by 90°. When closed, the two halves form one sun. The leaves hang on lattice pylons with X lacing.',
-    structure: ['Leaves: 80×30 frame', 'Hub: half-ring of 80×30 (r 450) at the bottom centre, with two inner 30×30 rings', 'Rays: 30×30 at 7.5° steps from the hub, with extra rays starting at the 1.4 m ring and at the 2.3 m ring, so the gaps stay even', 'Rings at r 1.4 m, 2.3 m and 3.2 m: 30×30 cut in short straight pieces (accent)', 'Pylons: 4 × L40 legs with 30×30 X lacing, 30×30 hip cap', 'Hidden L40 anti-sag strut on the inside face'],
+    how: 'دو لنگه 2.94 m، 90° به سمت داخل باز می‌شوند. در حالت بسته، دو نیمه با هم یک خورشید کامل می‌سازند. لنگه‌ها روی ستون‌های مشبک با بست‌بندی ضربدری نصب‌اند.',
+    structure: ['لنگه‌ها: قاب 80×30', 'مرکز خورشید: نیم‌حلقه 80×30 (r 450) در پایینِ وسط، با دو حلقه داخلی 30×30', 'پرتوها: قوطی 30×30 با گام 7.5° از مرکز، به‌علاوه پرتوهای اضافه که از حلقه 1.4 m و حلقه 2.3 m شروع می‌شوند تا فاصله‌ها یکنواخت بماند', 'حلقه‌ها با شعاع 1.4 m، 2.3 m و 3.2 m: قوطی 30×30 از قطعات کوتاه و صاف (رنگ تأکیدی)', 'ستون‌ها: 4 پایه نبشی L40 با بست‌بندی ضربدری 30×30، کلاهک 30×30', 'شمشیری پنهان ضد افتادگی L40 در سمت داخل'],
     buy: HW_SWING,
-    space: 'A clear 3 m swing area on the inside for each leaf.',
-    pros: ['A real eye-catcher, memorable company entrance', '100 % your steel', 'Rays and rings brace the leaf well'],
-    cons: ['Many angled cuts (~130 pieces per leaf); a jig on the floor is needed', 'Gaps between rays reach ~200 mm near the corners – decorative, not climb-proof', 'Needs a 3 m swing area'],
+    space: 'برای هر لنگه یک فضای باز 3 m در سمت داخل برای چرخش لازم است.',
+    pros: ['واقعاً چشمگیر؛ ورودی‌ای ماندگار برای شرکت', '100 % از آهن‌آلات خودتان', 'پرتوها و حلقه‌ها لنگه را به‌خوبی مهار می‌کنند'],
+    cons: ['برش‌های زاویه‌دار زیاد (حدود 130 قطعه برای هر لنگه)؛ به یک شابلون روی زمین نیاز است', 'فاصله بین پرتوها نزدیک گوشه‌ها به حدود 200 mm می‌رسد – تزئینی است، نه ضد بالا رفتن', 'به فضای چرخش 3 m نیاز دارد'],
     parts: Object.assign({
-      pylon: P('Lattice pylon', '4 × L40 legs, 30×30 battens + X lacing, 30×30 hip cap', '300×300 mm, 3.2 m above ground, legs cast 800 mm into the footing.'),
-      column: P('Hinge column', '80×30 box on the pylon inner face', 'The hinges are welded here.'),
-      frame: P('Leaf frame', '80×30 box', 'Top and bottom rails and stiles.', true),
-      hub: P('Sun hub', '80×30 half-ring + 30×30 inner rings, accent', 'Bottom centre of the gate; each leaf carries one quarter.', true),
-      rays: P('Rays', '30×30 box', 'Straight bars from the hub or a ring out to the frame.', true),
-      rings: P('Rings', '30×30 box, short straight pieces, accent', 'Radius 1.4, 2.3 and 3.2 m (the outer ring is cut off by the frame).', true)
+      pylon: P('ستون مشبک', '4 پایه نبشی L40، تسمه 30×30 + بست‌بندی ضربدری، کلاهک 30×30', '300×300 mm، 3.2 m بالاتر از زمین؛ پایه‌ها 800 mm داخل فونداسیون ریخته می‌شوند.'),
+      column: P('ستون لولا', 'قوطی 80×30 روی وجه داخلی ستون مشبک', 'لولاها به اینجا جوش می‌شوند.'),
+      frame: P('قاب لنگه', 'قوطی 80×30', 'افقی‌های بالا و پایین و عمودی‌های کناری.', true),
+      hub: P('مرکز خورشید', 'نیم‌حلقه 80×30 + حلقه‌های داخلی 30×30، رنگ تأکیدی', 'پایینِ وسط درب؛ هر لنگه یک‌چهارم آن را دارد.', true),
+      rays: P('پرتوها', 'قوطی 30×30', 'میله‌های صاف از مرکز یا از یک حلقه تا قاب.', true),
+      rings: P('حلقه‌ها', 'قوطی 30×30، قطعات کوتاه و صاف، رنگ تأکیدی', 'شعاع 1.4، 2.3 و 3.2 m (حلقه بیرونی را قاب می‌بُرد).', true)
     }, SWING_PARTS)
   }
 ];
@@ -186,7 +186,7 @@ function init() {
   controls.autoRotateSpeed = 0.6;
 
   if (window.matchMedia('(pointer: coarse)').matches)
-    document.getElementById('help').textContent = '☝ 1 finger = rotate · 2 fingers = zoom / pan · tap a part = details';
+    document.getElementById('help').textContent = '☝ یک انگشت = چرخاندن · دو انگشت = بزرگ‌نمایی / جابه‌جایی · لمس قطعه = جزئیات';
   renderer.domElement.addEventListener('pointerdown', () => { const h = document.getElementById('help'); setTimeout(() => h.style.opacity = '0', 3000); }, { once: true });
   const fsBtn = document.getElementById('fs');
   fsBtn.addEventListener('click', () => { const on = document.body.classList.toggle('full'); fsBtn.textContent = on ? '✕' : '⤢'; });
@@ -240,14 +240,15 @@ function init() {
   function textSprite(text, { color = '#ffffff', border = null, bg = 'rgba(16,20,30,0.86)', h = 0.017, bold = 600 } = {}) {
     const fontPx = 44, pad = 16, lines = String(text).split('\n');
     const c = document.createElement('canvas'), g = c.getContext('2d');
-    const font = `${bold} ${fontPx}px system-ui, "Segoe UI", sans-serif`;
+    const font = `${bold} ${fontPx}px Vazirmatn, Tahoma, "Segoe UI", system-ui, sans-serif`, rtl = /[\u0600-\u06FF]/.test(text);
     g.font = font;
     const tw = Math.max(...lines.map(l => g.measureText(l).width));
     c.width = Math.ceil(tw + pad * 2); c.height = Math.ceil(lines.length * fontPx * 1.2 + pad * 1.4);
     g.font = font; g.fillStyle = bg; roundRect(g, 2, 2, c.width - 4, c.height - 4, 14); g.fill();
     if (border) { g.lineWidth = 4; g.strokeStyle = border; g.stroke(); }
     g.fillStyle = color; g.textBaseline = 'top';
-    lines.forEach((l, i) => g.fillText(l, pad, pad * 0.7 + i * fontPx * 1.2));
+    if (rtl) { g.direction = 'rtl'; g.textAlign = 'right'; }
+    lines.forEach((l, i) => g.fillText(l, rtl ? c.width - pad : pad, pad * 0.7 + i * fontPx * 1.2));
     const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.minFilter = THREE.LinearFilter;
     const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, depthTest: false, depthWrite: false, transparent: true, sizeAttenuation: false }));
     const H = h * lines.length * 1.1;
@@ -459,11 +460,11 @@ function init() {
     box(ctx.root, [60, 120, 60], [-6580, 185, 0], M.rubber, 'stop');
     ctx.movers.push(t => { leaf.position.x = X0 - TRAVEL * t; wheels.forEach(w => w.rotation.z = TRAVEL * t / 60); });
     hatchZone(ctx, -6700, 0, -350, 350);
-    addDim(ctx.dims, [0, 20, 450], [6000, 20, 450], [0, 0, 0], 'Clear opening 6000');
-    addDim(ctx.dims, [6450, 0, 300], [6450, 3000, 300], [0, 0, 0], 'Height 3000', '#ffd34d', [500, 0, 0]);
-    addDim(ctx.dims, [X0, 3000, 0], [X0 + LA, 3000, 0], [0, 450, 0], 'Leaf 6500');
-    addDim(ctx.dims, [-6700, 20, -700], [0, 20, -700], [0, 0, 0], 'Runback ≥ 6700 (keep clear)', '#7fe0ff');
-    ctx.label([X0 + 450, 450, 450], 'V-wheel'); ctx.label([-3300, 300, 600], 'L40 ground track');
+    addDim(ctx.dims, [0, 20, 450], [6000, 20, 450], [0, 0, 0], 'دهانه آزاد 6000');
+    addDim(ctx.dims, [6450, 0, 300], [6450, 3000, 300], [0, 0, 0], 'ارتفاع 3000', '#ffd34d', [500, 0, 0]);
+    addDim(ctx.dims, [X0, 3000, 0], [X0 + LA, 3000, 0], [0, 450, 0], 'لنگه 6500');
+    addDim(ctx.dims, [-6700, 20, -700], [0, 20, -700], [0, 0, 0], 'فضای کنار درب ≥ 6700 (خالی بماند)', '#7fe0ff');
+    ctx.label([X0 + 450, 450, 450], 'چرخ V'); ctx.label([-3300, 300, 600], 'ریل زمینی L40');
     road(ctx); fence(ctx, -14000, -320, 300); fence(ctx, 6350, 16000, 0);
   }
 
@@ -485,8 +486,8 @@ function init() {
     bar(leaf, [LA - 80, 225, -35], [2 * LA / 3 + 40, 2485, -35], 'L40', 'brace', { ls: [1, -1] });
     slideGear(ctx, leaf);
     ladderPortal(ctx, -150, 'guide', 'zig', 2500, 70); ladderPortal(ctx, 6150, 'catch', 'zig');
-    ctx.label([-150, 3550, 0], 'Ladder guide portal'); ctx.label([6150, 3550, 0], 'Catch portal');
-    ctx.label([X0 + LA / 6, 3250, 200], 'Scalloped tops'); ctx.label([X0 + LA / 2, 1200, 400], '30×30 diamond band'); ctx.label([X0 + LA / 3, 2100, 300], '80×30 bay post');
+    ctx.label([-150, 3550, 0], 'قاب راهنمای نردبانی'); ctx.label([6150, 3550, 0], 'قاب قفل‌گیر');
+    ctx.label([X0 + LA / 6, 3250, 200], 'سرهای موجی'); ctx.label([X0 + LA / 2, 1200, 400], 'نوار لوزی 30×30'); ctx.label([X0 + LA / 3, 2100, 300], 'ستون میانی 80×30');
   }
 
   /* ================= B: sliding modern – slats + diagonal stripe ================= */
@@ -515,8 +516,8 @@ function init() {
     bar(leaf, [xr, y0, -45], [2 * LA / 3 + 40, y1, -45], 'L40', 'hidden', { ls: [1, -1] });
     slideGear(ctx, leaf);
     pinwheelPortal(ctx, -80, 'guide', 2960); pinwheelPortal(ctx, 6080, 'catch');
-    ctx.label([-80, 3550, 0], 'Pinwheel columns\n4 × 80×30'); ctx.label([6080, 3550, 0], 'Catch columns');
-    ctx.label([X0 + 2900, 1700, 300], 'Accent stripe\n30×30 verticals'); ctx.label([X0 + 5600, 900, 300], '80×30 slats');
+    ctx.label([-80, 3550, 0], 'ستون‌های فرفره‌ای\n4 × 80×30'); ctx.label([6080, 3550, 0], 'ستون‌های قفل‌گیر');
+    ctx.label([X0 + 2900, 1700, 300], 'نوار تأکیدی\nعمودی‌های 30×30'); ctx.label([X0 + 5600, 900, 300], 'تیغه‌های 80×30');
   }
 
   /* ================= C: sliding decorative – diamond lattice + crown ================= */
@@ -543,8 +544,8 @@ function init() {
     [40, LA - 40].forEach(x => { bar(leaf, [x, y0, 0], [x, 2940, 0], 'B80', 'frame'); tip(ctx, leaf, x, 3000, 'frame', { wide: true }); });
     slideGear(ctx, leaf);
     ladderPortal(ctx, -150, 'guide', 'x', 2760, 45); ladderPortal(ctx, 6150, 'catch', 'x');
-    ctx.label([-150, 3550, 0], 'Ladder portal, X lacing'); ctx.label([6150, 3550, 0], 'Catch portal');
-    ctx.label([X0 + LA / 2, 3300, 200], 'Toothed crown'); ctx.label([X0 + LA * 0.75, 2100, 300], '±60° diamond lattice'); ctx.label([X0 + LA * 0.3, yc, 400], 'Inner diamonds');
+    ctx.label([-150, 3550, 0], 'قاب نردبانی، بست ضربدری'); ctx.label([6150, 3550, 0], 'قاب قفل‌گیر');
+    ctx.label([X0 + LA / 2, 3300, 200], 'تاج دندانه‌دار'); ctx.label([X0 + LA * 0.75, 2100, 300], 'شبکه لوزی ±60°'); ctx.label([X0 + LA * 0.3, yc, 400], 'لوزی‌های داخلی');
   }
 
   /* ================= swing helpers ================= */
@@ -561,12 +562,12 @@ function init() {
     ctx.movers.push(t => { pivots[0].rotation.y = t * Math.PI / 2; pivots[1].rotation.y = -t * Math.PI / 2; });
     swingZone(ctx, 35, 2960, false); swingZone(ctx, 5965, 2960, true);
     ctx.box(ctx.root, [120, 8, 120], [3000, 4, -60], M.galv, 'drop');
-    addDim(ctx.dims, [0, 20, 500], [6000, 20, 500], [0, 0, 0], 'Clear opening 6000');
-    addDim(ctx.dims, [6650, 0, 300], [6650, 3000, 300], [0, 0, 0], 'Height 3000', '#ffd34d', [500, 0, 0]);
-    addDim(ctx.dims, [50, 3000, 0], [2990, 3000, 0], [0, 450, 0], 'Leaf 2940');
-    addDim(ctx.dims, [3010, 3000, 0], [5950, 3000, 0], [0, 450, 0], 'Leaf 2940');
-    addDim(ctx.dims, [35, 20, -150], [35, 20, -2960], [0, 0, 0], 'Swing radius 2960 (keep clear)', '#7fe0ff');
-    ctx.label([300, 400, -400], 'Heavy hinges'); ctx.label([3000, 600, -400], 'Drop bolt + stop');
+    addDim(ctx.dims, [0, 20, 500], [6000, 20, 500], [0, 0, 0], 'دهانه آزاد 6000');
+    addDim(ctx.dims, [6650, 0, 300], [6650, 3000, 300], [0, 0, 0], 'ارتفاع 3000', '#ffd34d', [500, 0, 0]);
+    addDim(ctx.dims, [50, 3000, 0], [2990, 3000, 0], [0, 450, 0], 'لنگه 2940');
+    addDim(ctx.dims, [3010, 3000, 0], [5950, 3000, 0], [0, 450, 0], 'لنگه 2940');
+    addDim(ctx.dims, [35, 20, -150], [35, 20, -2960], [0, 0, 0], 'شعاع بازشو 2960 (خالی بماند)', '#7fe0ff');
+    ctx.label([300, 400, -400], 'لولاهای سنگین'); ctx.label([3000, 600, -400], 'کلون زمینی + استاپر');
     road(ctx); fence(ctx, -14000, -420, 0); fence(ctx, 6420, 14000, 0);
     return pivots;
   }
@@ -596,8 +597,8 @@ function init() {
       for (let i = 0; i < nd; i++) diamond(ctx, pv, a + w * (i + 0.5), 2125, w / 2, 160, 'band', { s, z: 30, mat: ctx.mats.accent });
       bar(pv, [X(95), 160, -35], [X(2875), 2285, -35], 'L40', 'strut', { ls: [s, -1] });
     });
-    ctx.label([-150, 3800, 0], 'Lattice pylon\n4×L40 + 30×30'); ctx.label([3000, 3350, 200], 'Arched picket tops');
-    ctx.label([1500, 2125, 400], 'Accent diamond band'); ctx.label([4500, 300, 400], 'Dog bars'); ctx.label([1500, 1100, -400], 'L40 anti-sag strut');
+    ctx.label([-150, 3800, 0], 'ستون مشبک\n4×L40 + 30×30'); ctx.label([3000, 3350, 200], 'سر نرده‌های قوسی');
+    ctx.label([1500, 2125, 400], 'نوار لوزی تأکیدی'); ctx.label([4500, 300, 400], 'میله‌های ضد عبور حیوانات'); ctx.label([1500, 1100, -400], 'شمشیری ضد افتادگی L40');
   }
 
   /* ================= E: swing modern – skyline ================= */
@@ -632,8 +633,8 @@ function init() {
       rows.forEach(([y, x0, x1]) => ctx.bar(pv, [X(x0), y, 30], [X(x1), y, 30], 'B80', 'sky', { mat: ctx.mats.accent }));
       ctx.bar(pv, [X(95), 160, -35], [X(2875), 2920, -35], 'L40', 'strut', { ls: [s, -1] });
     });
-    ctx.label([-195, 3700, 0], 'Twin pinwheel pylon\n2 × (4 × 80×30)'); ctx.label([3000, 3250, 300], 'Skyline: 80×30 accent slats');
-    ctx.label([4800, 1000, 300], '30×30 background bars'); ctx.label([1500, 1100, -400], 'L40 anti-sag strut');
+    ctx.label([-195, 3700, 0], 'ستون دوقلوی فرفره‌ای\n2 × (4 × 80×30)'); ctx.label([3000, 3250, 300], 'خط افق: تیغه‌های تأکیدی 80×30');
+    ctx.label([4800, 1000, 300], 'میله‌های زمینه 30×30'); ctx.label([1500, 1100, -400], 'شمشیری ضد افتادگی L40');
   }
 
   /* ================= F: swing decorative – sunrise ================= */
@@ -652,8 +653,8 @@ function init() {
       for (let i = 0; i < 24; i++) { const d = 91.875 + 3.75 * i; if (d <= 168) ray(d, 2315); }
       ctx.bar(pv, [X(95), 160, -35], [X(2875), 2920, -35], 'L40', 'strut', { ls: [s, -1] });
     });
-    ctx.label([-150, 3800, 0], 'Lattice pylon, X lacing'); ctx.label([3000, 900, 400], 'Sun hub 80×30');
-    ctx.label([1700, 2500, 300], '30×30 rays'); ctx.label([4300, 1800, 300], 'Accent rings');
+    ctx.label([-150, 3800, 0], 'ستون مشبک، بست ضربدری'); ctx.label([3000, 900, 400], 'مرکز خورشید 80×30');
+    ctx.label([1700, 2500, 300], 'پرتوهای 30×30'); ctx.label([4300, 1800, 300], 'حلقه‌های تأکیدی');
   }
 
   /* ---------- build all ---------- */
@@ -664,7 +665,7 @@ function init() {
   OPTIONS.forEach(o => {
     const ctx = makeCtx(o); BUILD[o.id](ctx); CTX[o.id] = ctx; scene.add(ctx.root);
     ctx.meshes.forEach(m => m.userData.mat0 = m.material);
-    const tag = textSprite(`${o.id} · ${o.kind === 'slide' ? 'Sliding' : 'Swing'} · ${BADGE[o.budget][1]}`, { color: '#fff', border: TAGC[o.budget], h: 0.022, bold: 800 });
+    const tag = textSprite(`${o.id} · ${o.kind === 'slide' ? 'ریلی' : 'لولایی'} · ${BADGE[o.budget][1]}`, { color: '#fff', border: TAGC[o.budget], h: 0.022, bold: 800 });
     tag.position.set(o.center[0], 4700, 0); ctx.root.add(tag); ctx.tagSprite = tag;
   });
 
@@ -702,7 +703,7 @@ function init() {
   const cards = document.getElementById('cards');
   OPTIONS.forEach(o => {
     const d = document.createElement('div'); d.className = 'card'; d.dataset.opt = o.id;
-    d.innerHTML = `<span class="code">${o.id}</span><span class="k">${o.kind === 'slide' ? '⇄ Sliding' : '⟲ Swing (2 leaves)'}</span>
+    d.innerHTML = `<span class="code">${o.id}</span><span class="k">${o.kind === 'slide' ? '⇄ ریلی (کشویی)' : '⟲ لولایی (دولنگه)'}</span>
       <div class="t">${o.short}</div><span class="badge ${o.budget}">${BADGE[o.budget][0]}</span>`;
     d.onclick = () => selectOpt(o.id, true);
     cards.appendChild(d);
@@ -720,22 +721,22 @@ function init() {
       <h2>${o.id} · ${o.title}</h2>
       <p><i>${o.tagline}</i></p>
       <div class="kpi">
-        <div>${o.kind === 'slide' ? 'Leaf weight' : 'Weight per leaf'}<b>≈ ${Math.round(leafKg)} kg</b></div>
-        <div>Steel from your stock<b>≈ ${Math.round(stockKg)} kg</b></div>
-        <div>Movement<b>${o.kind === 'slide' ? 'Slides left ' + (o.travel / 1000).toFixed(2) + ' m' : '2 × 90° inwards'}</b></div>
-        <div>Style<b>${BADGE[o.budget][0]}</b></div>
-        <div>Pieces to cut<b>${ctx.members.length}</b></div>
+        <div>${o.kind === 'slide' ? 'وزن لنگه' : 'وزن هر لنگه'}<b>≈ ${Math.round(leafKg)} kg</b></div>
+        <div>آهن‌آلات از موجودی شما<b>≈ ${Math.round(stockKg)} kg</b></div>
+        <div>حرکت<b>${o.kind === 'slide' ? 'لغزش به چپ ' + (o.travel / 1000).toFixed(2) + ' m' : '2 × 90° به داخل'}</b></div>
+        <div>سبک<b>${BADGE[o.budget][0]}</b></div>
+        <div>تعداد قطعات برش<b>${ctx.members.length}</b></div>
       </div>
-      <h3>How it works</h3><p>${o.how}</p>
-      <h3>Structure</h3><ul>${li(o.structure)}</ul>
-      <h3>Steel list – all from your stock (whole gate incl. posts)</h3>
-      <table class="bom"><tr><th>Section</th><th class="n">pcs</th><th class="n">total</th><th class="n">6 m bars*</th><th class="n">weight</th></tr>${rows}
-      <tr class="tot"><td>Total, from your stock</td><td></td><td></td><td></td><td class="n">${Math.round(stockKg)} kg</td></tr></table>
-      <p class="hint">* 6 m bars incl. ~10 % offcuts. Wall thickness assumed 2 mm. The exact cut list comes with the contractor pack.</p>
-      <h3>Hardware to buy (no steel)</h3><ul>${li(o.buy)}</ul>
-      <h3>Space needed</h3><p>${o.space}</p>
-      <h3>✅ Pros</h3><ul>${li(o.pros)}</ul>
-      <h3>⚠️ Cons</h3><ul>${li(o.cons)}</ul>`;
+      <h3>نحوه کار</h3><p>${o.how}</p>
+      <h3>ساختار</h3><ul>${li(o.structure)}</ul>
+      <h3>فهرست آهن‌آلات – همه از موجودی شما (کل درب، همراه ستون‌ها)</h3>
+      <table class="bom"><tr><th>مقطع</th><th class="n">تعداد</th><th class="n">طول کل</th><th class="n">شاخه 6 m*</th><th class="n">وزن</th></tr>${rows}
+      <tr class="tot"><td>جمع کل، از موجودی شما</td><td></td><td></td><td></td><td class="n">${Math.round(stockKg)} kg</td></tr></table>
+      <p class="hint">* شاخه‌های 6 m با احتساب حدود 10 % پرت برش. ضخامت دیواره 2 mm فرض شده است. فهرست دقیق برش همراه با بسته پیمانکار ارائه می‌شود.</p>
+      <h3>یراق‌آلات خریدنی (بدون آهن‌آلات)</h3><ul>${li(o.buy)}</ul>
+      <h3>فضای لازم</h3><p>${o.space}</p>
+      <h3>✅ مزایا</h3><ul>${li(o.pros)}</ul>
+      <h3>⚠️ معایب</h3><ul>${li(o.cons)}</ul>`;
     document.querySelectorAll('.card').forEach(c => c.classList.toggle('sel', c.dataset.opt === state.opt));
     renderSwatches();
   }
@@ -767,8 +768,8 @@ function init() {
     const ms = ctx.members.filter(m => m.part === part);
     const bySec = {}; ms.forEach(m => { const b = bySec[m.sec] || (bySec[m.sec] = { n: 0, len: 0 }); b.n++; b.len += m.len; });
     const qty = Object.entries(bySec).map(([s, b]) => `${b.n} × ${SEC[s].label} = ${(b.len / 1000).toFixed(1)} m`).join('<br>');
-    info.innerHTML = `<button class="x" title="close">×</button><h3>${optId} · ${p.name}</h3>
-      <table><tr><th>Made of</th><td>${p.made}</td></tr>${qty ? `<tr><th>Quantity</th><td>${qty}</td></tr>` : ''}${p.leaf ? '<tr><th>Moves</th><td>yes, part of the leaf</td></tr>' : ''}</table><p>${p.note}</p>`;
+    info.innerHTML = `<button class="x" title="بستن">×</button><h3>${optId} · ${p.name}</h3>
+      <table><tr><th>جنس</th><td>${p.made}</td></tr>${qty ? `<tr><th>تعداد</th><td>${qty}</td></tr>` : ''}${p.leaf ? '<tr><th>متحرک</th><td>بله، بخشی از لنگه است</td></tr>' : ''}</table><p>${p.note}</p>`;
     info.style.display = 'block';
     info.querySelector('.x').onclick = () => select(null);
   }
@@ -863,7 +864,7 @@ function init() {
       const sp = 0.22 * dt; state.open += Math.max(-sp, Math.min(sp, state.target - state.open));
       openR.value = Math.round(state.open * 100);
     }
-    play.textContent = state.target > 0.5 ? '■ Close' : '▶ Open';
+    play.textContent = state.target > 0.5 ? '■ بستن' : '▶ باز کردن';
     OPTIONS.forEach(o => CTX[o.id].movers.forEach(f => f(state.open)));
     if (fly) {
       const k = Math.min(1, (now - fly.t0) / 800), e = ease(k);
