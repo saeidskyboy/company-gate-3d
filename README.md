@@ -1,20 +1,22 @@
 # Industrial entrance gate: 3D concepts
 
-Interactive 3D concepts for a **6.0 m × 3.0 m** industrial entrance gate, built mainly from stock steel:
-L40×40×4 angle, 80×30 box and 30×30 box.
+Interactive 3D concepts for a **6.0 m × 3.0 m** industrial entrance gate. **All steel comes from stock only:**
+L40×40×4 angle, 80×30 box and 30×30 box. Only the hardware is bought: wheels or rollers, hinges, locks, concrete and paint.
 
 **▶ Open the 3D viewer: https://saeidskyboy.github.io/company-gate-3d/**
 
-| | Type | Budget | Idea |
+| | Type | Level | Design |
 |---|---|---|---|
-| A | Sliding | 💰 Budget | Ground-track slider, 30×30 spear pickets, guide and catch portals |
-| B | Sliding | ✨ Premium | Trackless cantilever, horizontal 80×30 slats, backlit logo, motor |
-| C | Swing | 💰 Budget | Double leaf on lattice pylons made of L40 + 30×30 |
-| D | Swing | ✨ Premium | “Barcode” 80×30 + 30×30 leaves, clad pillars with LED caps, underground motors |
+| A | Sliding | 💰 Budget | Scalloped 30×30 pickets, diamond band, ladder portals |
+| B | Sliding | ✨ Modern | Trackless cantilever, 80×30 slats with diagonal accent stripes |
+| C | Sliding | 🎨 Decorative | 30×30 diamond lattice, medallion row, toothed crown |
+| D | Swing | 💰 Budget | Arched pickets, diamond band, lattice pylons (L40 + 30×30) |
+| E | Swing | ✨ Modern | Vertical bars plus a front layer of 80×30 “mountain skyline” slats, twin pylons |
+| F | Swing | 🎨 Decorative | Sunrise rays and rings, X-laced pylons |
 
-Drag to rotate, scroll to zoom, and click any part to see what it is made of. You can open and close the gate, compare all 4, switch on night mode and change the colours.
+Drag to rotate, scroll to zoom, and click any part to see what it is made of. You can open and close the gate, compare all 6, switch on night mode and change the colours.
 
-Deep links: `#opt=B`, `#all=1`, `#opt=C&open=1&view=front`, `#night=1`.
+Deep links: `#opt=B`, `#all=1`, `#opt=D&open=1&view=front`, `#night=1`.
 
 > Concept stage. The contractor or a structural engineer must confirm member sizes, posts, foundations and hardware before building.
 

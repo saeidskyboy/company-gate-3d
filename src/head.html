@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141925">
-<title>Industrial entrance gate · 4 concepts in 3D</title>
-<meta name="description" content="6 m × 3 m industrial entrance gate: 2 sliding and 2 swing concepts built from L40 angle, 80×30 and 30×30 box. Rotate, open and compare them in 3D.">
-<meta property="og:title" content="🏭 Industrial entrance gate · 4 concepts in 3D">
-<meta property="og:description" content="6 m × 3 m gate: 2 sliding + 2 swing designs, budget and premium. Rotate, open and compare in 3D.">
+<title>Industrial entrance gate · 6 concepts in 3D</title>
+<meta name="description" content="6 m × 3 m industrial entrance gate: 3 sliding and 3 swing concepts built only from L40 angle, 80×30 and 30×30 box. Rotate, open and compare them in 3D.">
+<meta property="og:title" content="🏭 Industrial entrance gate · 6 concepts in 3D">
+<meta property="og:description" content="6 m × 3 m gate: 3 sliding + 3 swing designs (budget, modern, decorative), only from stock steel. Rotate, open and compare in 3D.">
 <meta property="og:image" content="https://saeidskyboy.github.io/company-gate-3d/preview.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:url" content="https://saeidskyboy.github.io/company-gate-3d/">
@@ -34,7 +34,7 @@
   input[type=range] { flex:1; min-width:120px; accent-color:var(--acc); }
   .tag { display:inline-block; font-size:12px; letter-spacing:.04em; color:#1b1b1b; background:linear-gradient(90deg,#ffd34d,#ffb020); border-radius:20px; padding:3px 12px; margin-bottom:6px; font-weight:600; }
   .hint { color:var(--mute); font-size:12px; }
-  #cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  #cards { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:repeat(3,auto); grid-auto-flow:column; gap:8px; margin-top:10px; }
   .card { border:1px solid #3b4768; border-radius:10px; padding:8px 10px; cursor:pointer; background:#222a3d; }
   .card:hover { background:#2a3349; }
   .card.sel { border-color:var(--acc); background:#33301f; box-shadow:0 0 0 1px var(--acc) inset; }
@@ -44,6 +44,7 @@
   .badge { display:inline-block; font-size:11px; border-radius:10px; padding:1px 8px; margin-top:4px; }
   .eco { background:#21402a; color:#a8f0b8; border:1px solid #3c7a4c; }
   .pro { background:#3d2a4d; color:#e2c2ff; border:1px solid #7a4fa0; }
+  .deco { background:#40301a; color:#ffd59a; border:1px solid #8a6a2a; }
   .sw { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0; }
   .sw button { padding:4px 8px; font-size:12px; display:flex; align-items:center; gap:6px; }
   .sw i { display:inline-block; width:14px; height:14px; border-radius:3px; border:1px solid #fff5; }
@@ -111,12 +112,12 @@
     </div>
     <h2>Show</h2>
     <div class="btns">
-      <button data-toggle="all">Compare all 4</button>
+      <button data-toggle="all">Compare all 6</button>
       <button data-toggle="dims">Dimensions</button>
       <button data-toggle="labels">Labels</button>
       <button data-toggle="env">Fence &amp; road</button>
       <button data-toggle="truck">Truck &amp; person</button>
-      <button data-toggle="night">Night (LED)</button>
+      <button data-toggle="night">Night</button>
       <button data-toggle="spin">Auto-rotate</button>
     </div>
     <h2>Colour <span class="hint" style="text-transform:none;letter-spacing:0">(selected concept)</span></h2>
@@ -127,6 +128,7 @@
   <div id="detail"></div>
 
   <h2>Your stock (as I read it)</h2>
+  <p><b>Every steel member in all 6 concepts comes from these three sections</b> – leaves, posts, pylons, track and bracing. Only hardware (wheels, rollers, hinges, locks), concrete and paint is bought.</p>
   <ul>
     <li><b>“L number 4”</b> → equal angle <b>L40×40×4</b> (≈ 2.4 kg/m)</li>
     <li><b>“8×3” box</b> → rectangular tube <b>80×30</b>, wall ~2 mm (≈ 3.3 kg/m)</li>
@@ -136,7 +138,7 @@
   <div class="warn">Concept stage: member sizes are sensible starting points for a 6 × 3 m industrial gate. The contractor (or a structural engineer) should confirm posts, foundations and hardware ratings for your wind zone and soil before building.</div>
 
   <h2>Next step</h2>
-  <p>Pick a concept (or mix them, e.g. B's slats on a C swing gate). Then I'll prepare the <b>contractor pack</b>: dimensioned shop drawings, a cut list from your 6 m bars, weld and finish spec, foundation sketch and the hardware spec.</p>
+  <p>Pick a concept (or mix ideas, e.g. the C lattice as a swing gate). Then I'll prepare the <b>contractor pack</b>: dimensioned shop drawings, a cut list from your 6 m bars, weld and finish spec, foundation sketch and the hardware spec.</p>
 </aside>
 <div id="view">
   <div id="help">🖱 drag = rotate · scroll = zoom · right-drag = pan · click a part = details</div>

@@ -1,125 +1,159 @@
 <script>
 /* ================= data ================= */
 const SEC = {
-  B80: { label: 'Box 80×30', spec: 'Rectangular tube 80×30×2 (your “8×3”)', kg: 3.33, stock: true, sy: 80, sz: 30 },
-  B30: { label: 'Box 30×30', spec: 'Square tube 30×30×2 (your “3×3”)', kg: 1.76, stock: true, sy: 30, sz: 30 },
-  L40: { label: 'Angle L40', spec: 'Equal angle L40×40×4 (your “L no. 4”)', kg: 2.42, stock: true, L: true },
-  S120: { label: 'SHS 120×120×5', spec: 'Square hollow section 120×120×5 (buy)', kg: 18.1, stock: false, sy: 120, sz: 120 },
-  S200: { label: 'SHS 200×200×8', spec: 'Square hollow section 200×200×8 (buy)', kg: 48.2, stock: false, sy: 200, sz: 200 },
-  CP: { label: 'Cantilever track', spec: 'Galvanised cantilever track profile, part of the cantilever kit (buy)', kg: 10.5, stock: false, sy: 90, sz: 80 }
+  B80: { label: 'Box 80×30', spec: 'Rectangular tube 80×30×2 (your “8×3”)', kg: 3.33, sy: 80, sz: 30 },
+  B30: { label: 'Box 30×30', spec: 'Square tube 30×30×2 (your “3×3”)', kg: 1.76, sy: 30, sz: 30 },
+  L40: { label: 'Angle L40', spec: 'Equal angle L40×40×4 (your “L no. 4”)', kg: 2.42, L: true }
 };
 const PAINTS = [['RAL 7016 Anthracite', '#383e42'], ['RAL 9005 Black', '#18191b'], ['RAL 7035 Light grey', '#c5c7c4'], ['RAL 6005 Moss green', '#1f4a38'], ['RAL 5010 Gentian blue', '#1a4a85'], ['Hot-dip galvanised', '#a9aeb1']];
 const ACCENTS = [['RAL 2004 Orange', '#e75b12'], ['RAL 1023 Traffic yellow', '#f0ca00'], ['Corten look', '#8a4a2b'], ['RAL 9006 Silver', '#a5a8a6'], ['RAL 3020 Red', '#c1121c'], ['RAL 7016 Anthracite', '#383e42']];
+const BADGE = { eco: ['💰 Budget', 'Budget'], pro: ['✨ Modern', 'Modern'], deco: ['🎨 Decorative', 'Decorative'] };
 
 const P = (name, made, note, leaf = false) => ({ name, made, note, leaf });
+const HW_SLIDE = ['2 × V-groove wheels Ø120–160 with sealed bearings (rating see “Leaf weight” ×1.5)', '4 × nylon guide rollers Ø60 on M12 bolts', 'Rubber end-stop buffer, sliding-gate lockbox + padlock', 'Concrete C25/30 for the track strip and post footings, M12 anchors', 'Zinc-rich primer + 2 coats industrial enamel (or hot-dip galvanising)', 'Optional later: M4 rack + sliding motor'];
+const HW_SWING = ['4 × heavy weld-on hinges Ø40 (bearing type), 2 per leaf', 'Drop bolt Ø16 + ground socket, centre stop, double-gate lockbox', '2 × hold-open hooks (wind)', 'Concrete C25/30 for the post footings', 'Zinc-rich primer + 2 coats industrial enamel (or hot-dip galvanising)', 'Optional later: 2 arm-type swing motors'];
+const SLIDE_PARTS = {
+  wheels: P('V-groove wheels', 'Buy: cast steel, sealed bearings', 'Bolted in brackets under the bottom rail, 450 mm from each end.'),
+  rail: P('Ground track', 'L40 angle turned apex-up (your stock)', 'The V-wheels ride on the apex. Welded to anchors in a 300 mm wide concrete strip. Must be straight and level.'),
+  rollers: P('Top guide rollers', 'Buy: nylon rollers Ø60', 'Roll against the top rail and keep the leaf upright.'),
+  stop: P('End stop post', '80×30 box + rubber buffer', 'Stops the leaf at the fully open position.'),
+  lock: P('Lockbox', 'Buy: weld-on sliding-gate lockbox', 'Locks into the keeper on the catch post.'),
+  found: P('Concrete', 'C25/30 concrete', 'Track strip 300 wide × 300 deep. Post footings 600×600×1000 deep; the posts are cast in, so no base plates are needed.')
+};
+const SWING_PARTS = {
+  hinge: P('Heavy hinges', 'Buy: weld-on bearing hinges Ø40', '2 per leaf, about 2.2 m apart.'),
+  drop: P('Drop bolt + centre stop', 'Buy: Ø16 drop bolt, ground socket', 'Holds the passive leaf in place.', true),
+  lock: P('Lockbox', 'Buy: double-gate lockbox', 'Joins the two leaves in the middle.', true),
+  strut: P('Anti-sag strut', 'L40 angle, inside face', 'Runs from the bottom hinge corner to the top free corner. Working in compression, it holds the free end of the leaf up.', true),
+  found: P('Footing', 'C25/30 concrete', '1.0 × 1.0 × 1.2 m deep per post. The post legs are cast in 800 mm, so no base plates are needed.')
+};
 const OPTIONS = [
   {
-    id: 'A', kind: 'slide', budget: 'eco', short: 'Track slider, spear pickets',
-    title: 'Sliding · Budget: track gate with spear pickets',
-    tagline: 'A classic industrial sliding gate on a ground track. Almost all of it is cut from your stock.',
-    paint: '#1f4a38', accent: '#f0ca00', center: [-300, 1300, 0], span: 16500,
-    detail: { p: [-1200, 900, 2600], t: [-350, 250, 0] }, travel: 6080,
-    how: 'One 6.44 m leaf runs on two V-groove wheels along an inverted L40 angle (the rail) set in a concrete strip. A guide portal at the opening holds the top of the leaf with nylon rollers. When closed, the leaf end enters a catch portal on the other side.',
-    structure: ['Leaf frame: 80×30 bottom rail (carries the wheels) and stiles. The top and mid rails are 80×30 laid flat (80 deep), with holes punched for the pickets.', '30×30 pickets every ~121 mm (gap ~90 mm) with spear tips at 3.0 m', 'Two L40 diagonals on the inside face stop the leaf from racking', 'Guide and catch portals: two 80×30 uprights each, tied at the top, on base plates', 'Track: L40 turned apex-up, welded to anchors in a 300 mm concrete strip, 12.7 m long'],
-    buy: ['2 × V-groove wheels Ø120 with bearings, ≥ 500 kg each', '4 × nylon guide rollers Ø60', 'End stop with rubber buffer, lockbox and padlock', '6 × base plates 250×250×10, anchors', '~1.2 m³ concrete for the track strip and portal footings', 'Zinc-rich primer + 2 coats of industrial enamel', 'Later, to automate: M4 rack + 600 kg sliding motor'],
-    space: 'At least 6.6 m of flat, level and clear space to the left of the opening (on the inside of the fence).',
-    pros: ['Cheapest option: mostly your own steel plus about 2 wheels and 4 rollers', 'Simple to weld, any local workshop can build it', 'See-through: low wind load, guards can see the road', 'Easy to motorise later'],
-    cons: ['The track collects dirt, gravel and ice, and must be kept clean', 'Trucks drive over the rail and wheels wear', 'Looks plain and utilitarian'],
-    parts: {
-      frame: P('Leaf frame and rails', '80×30 box', 'The bottom rail is upright (80 tall) because it carries the wheels. The top and mid rails lie flat (80 deep) so the pickets pass through punched holes.', true),
-      pickets: P('Pickets', '30×30 box', 'About 121 mm apart, which leaves a ~90 mm gap (less than 100 mm, so people cannot squeeze through).', true),
-      tips: P('Spear tips', 'Pressed steel spear caps for 30×30 (buy, cheap) or cut-and-welded 3 mm plate', 'Anti-climb finish on top of the pickets. Welded on and ground smooth.', true),
-      brace: P('Diagonal braces', 'L40 angle', 'Welded on the inside face. They keep the 6.4 m leaf square and stop it sagging between the wheels.', true),
-      wheels: P('V-groove wheels Ø120', 'Buy: cast steel, sealed bearings, ≥ 500 kg each', 'Bolted in brackets under the bottom rail, 450 mm from each end.'),
-      rail: P('Ground track', 'L40 angle turned apex-up', 'The V-wheels ride on the apex. It is welded to anchor plates in a 300 mm wide concrete strip and must be perfectly straight and level.'),
-      guide: P('Guide portal', '2 × 80×30 uprights + 80×30 tie, base plates 250×250×10', 'Holds the top of the leaf upright with nylon rollers.'),
-      rollers: P('Top guide rollers', 'Buy: nylon rollers Ø60 on M12 bolts', 'Roll against the top rail. Fit 2 per portal.'),
-      catch: P('Catch portal', '2 × 80×30 uprights + tie, base plates', 'The leaf end slides in between the uprights when the gate is closed. The lock keeper is mounted here.'),
-      stop: P('End stop post', '80×30 + rubber buffer', 'Stops the leaf at the fully open position.'),
-      lock: P('Lockbox', 'Buy: welded-on sliding-gate lockbox', 'Locks into the keeper on the catch portal.'),
-      found: P('Concrete', 'C25/30 concrete', 'Track strip 300 wide × 300 deep. Portal footings 600×600×1000 deep.')
-    }
+    id: 'A', kind: 'slide', budget: 'eco', short: 'Scalloped pickets + diamond band',
+    title: 'Sliding · Budget: scalloped pickets with a diamond band',
+    tagline: 'A picket gate that is not plain: the picket tops follow three scallops, a chain of 30×30 diamonds runs across the middle and the posts are laced ladders.',
+    paint: '#1f4a38', accent: '#f0ca00', center: [-300, 1400, 0], span: 16500,
+    detail: { p: [-1300, 900, 2600], t: [-350, 300, 0] }, travel: 6160,
+    how: 'One 6.50 m leaf runs on two V-groove wheels along an L40 angle turned apex-up in a concrete strip. A guide portal at the opening holds the top of the leaf with nylon rollers. When closed, the leaf end enters a catch portal.',
+    structure: ['Leaf frame: 80×30 bottom rail and stiles; three flat 80×30 rails at 1000, 1400 and 2500 with punched holes for the pickets', 'Two 80×30 bay posts split the leaf into 3 bays. In each bay the picket tops follow a scallop: 3.00 m at the bay posts, 2.78 m in the middle', 'A 30×30 scallop rail, cut in short straight pieces, follows the tops 150 mm below the points', 'Diamond band between 1000 and 1400: a chain of 30×30 diamonds welded to the street face of the pickets (accent colour)', 'Picket points: each 30×30 is cut with four 45° notches, hammered closed and welded – no bought caps', 'Guide and catch portals: two ladder posts each (2 × 80×30 with 30×30 zig-zag lacing), cast 800 mm into the footing'],
+    buy: HW_SLIDE,
+    space: 'At least 6.7 m of flat, level and clear space to the left of the opening (inside the fence).',
+    pros: ['Cheapest: 100 % your steel, only wheels, rollers and the lock are bought', 'Familiar build, any workshop can weld it', 'Picket gaps ~90 mm (< 100 mm, climb- and squeeze-resistant)', 'See-through: low wind load'],
+    cons: ['Ground track must be kept clean of gravel and ice', 'Trucks drive over the rail', 'Scallop and diamonds add ~1 day of welding over a plain picket gate'],
+    parts: Object.assign({
+      frame: P('Leaf frame and rails', '80×30 box', 'Bottom rail upright (80 tall, carries the wheels). The rails at 1000, 1400 and 2500 lie flat with punched holes for the pickets.', true),
+      bay: P('Bay posts', '80×30 box', 'Split the leaf into 3 bays of ~2.1 m and give the scallops their high points.', true),
+      pickets: P('Pickets', '30×30 box, pinched points', '~121 mm pitch, ~90 mm gap. The height follows the scallop curve.', true),
+      scallop: P('Scallop rail', '30×30 box, short straight pieces', 'Follows the picket tops 150 mm below the points. It ties the tops together and makes the curve visible.', true),
+      band: P('Diamond band', '30×30 box, accent colour', 'Chain of diamonds (≈480 × 380) welded to the street face of the pickets between the 1000 and 1400 rails.', true),
+      brace: P('Diagonal braces', 'L40 angle, inside face', 'Keep the 6.5 m leaf square and stop it sagging between the wheels.', true),
+      guide: P('Guide portal', '2 ladder posts: 2 × 80×30 + 30×30 zig-zag lacing each, 80×30 top tie', 'Holds the top of the leaf upright with nylon rollers. Cast 800 mm into the footing.'),
+      catch: P('Catch portal', '2 ladder posts + 80×30 tie', 'The leaf end slides in between when closed. The lock keeper is mounted here.')
+    }, SLIDE_PARTS)
   },
   {
-    id: 'B', kind: 'slide', budget: 'pro', short: 'Cantilever, slats + logo',
-    title: 'Sliding · Premium: cantilever with horizontal slats',
-    tagline: 'A trackless cantilever gate: nothing on the ground in the opening, clean horizontal slats, a backlit logo and a motor.',
-    paint: '#383e42', accent: '#e75b12', center: [-1500, 1300, 0], span: 19500,
-    detail: { p: [-3600, 1300, -3800], t: [-1300, 300, 0] }, travel: 6180,
-    how: 'The leaf (a 6.3 m panel plus a 2.6 m counterbalance tail) hangs on two roller carriages that sit on a foundation beside the opening. Its front end lands on a catch roller. The driveway stays completely clear, which is ideal for trucks, snow and dirt.',
-    structure: ['Panel: 80×30 frame with 21 horizontal 80×30 slats (gap ~46 mm, about 62 % solid)', 'Hidden on the inside face: two 80×30 verticals (they hold the slats every ~2 m) and L40 diagonals', 'Tail: sloped 80×30 top chord with 30×30 verticals and diagonals', 'Galvanised cantilever track bolted under the whole 8.9 m leaf', 'Logo plate: 3 mm laser-cut steel, LED backlit, plus an LED line along the top rail'],
-    buy: ['Heavy cantilever kit rated ≥ 800 kg: about 9 m of track, 2 carriages, top guide, catch roller and end caps', '3 × SHS 120×120×5 posts (2 guide, 1 catch) with base plates', 'Sliding operator ≥ 1000 kg with M4 rack, photocells, flashing lamp, safety edge', 'Logo plate (laser cut) + LED strip and driver', 'Hot-dip galvanising + powder coat', 'Carriage foundation ~2.8 × 0.7 × 1.0 m, reinforced'],
-    space: 'About 9.2 m of clear space to the left (panel + tail). The ground there can be uneven, because only the carriage foundation needs to be level.',
-    pros: ['Nothing in the driveway: no track to clean, no wear from trucks', 'The most representative and modern look, with a branded entrance', 'Fully automatic and quiet', 'Long life once galvanised and powder coated'],
-    cons: ['The most expensive option: kit, motor, galvanising and an engineered foundation', 'Heavy (see the leaf weight), so you need the heavy-duty kit', 'Slats catch more wind, so the posts and foundation need sizing', 'Horizontal slats can be climbed like a ladder. Add an anti-climb top if security matters'],
-    parts: {
-      frame: P('Panel frame', '80×30 box', 'The outer frame of the 6.3 m panel.', true),
-      slats: P('Horizontal slats', '80×30 box, 80 face visible', '21 slats with a ~46 mm gap. Welded to the end stiles and to the 2 hidden verticals.', true),
-      hidden: P('Hidden verticals and bracing', '80×30 box + L40 angle, inside face', 'Not visible from the street. They stop the slats sagging and keep the panel stiff while it overhangs during travel.', true),
-      tail: P('Counterbalance tail', '80×30 sloped chord, 30×30 verticals and diagonals', '2.6 m long. It balances the panel on the carriages while the gate is moving.', true),
-      track: P('Cantilever track', 'Galvanised profile from the kit', 'Bolted under the full leaf. The carriage rollers run inside it.', true),
-      carriage: P('Roller carriages', 'Buy: part of the cantilever kit', 'Two carriages on a levelled foundation, about 2.2 m apart.'),
-      guide: P('Guide posts + top guide', '2 × SHS 120×120×5, top guide rollers', 'Keep the leaf upright at the opening. A flashing lamp sits on top.'),
-      catch: P('Catch post', 'SHS 120×120×5 with a bottom catch roller and top receiver fork', 'Takes the leaf weight at the front when the gate is closed.'),
-      logo: P('Logo plate', '3 mm laser-cut steel, LED backlit', 'Placeholder: send me the company logo and I will put it here.', true),
-      led: P('LED line', 'IP67 LED strip in an aluminium channel', 'Runs along the top rail and glows at night.', true),
-      rack: P('Gear rack', 'Buy: M4 steel rack', 'Bolted along the inside of the bottom rail. The motor pinion drives it.', true),
-      motor: P('Sliding gate operator', 'Buy: ≥ 1000 kg industrial operator', 'Sits on the carriage foundation on the inside, with photocells and a safety edge.'),
-      lamp: P('Flashing lamp', 'Buy', 'Flashes while the gate moves.'),
-      found: P('Foundation', 'Reinforced C25/30 concrete', 'Carriage beam about 2.8 × 0.7 × 1.0 m, post footings 700×700×1100.')
-    }
+    id: 'B', kind: 'slide', budget: 'pro', short: 'Slats cut by a diagonal stripe',
+    title: 'Sliding · Modern: horizontal slats with a diagonal stripe',
+    tagline: 'Clean horizontal 80×30 slats, cut by a bold diagonal stripe of accent-coloured 30×30 verticals and a thin echo stripe. Posts are 4 × 80×30 welded into a pinwheel column.',
+    paint: '#383e42', accent: '#e75b12', center: [-300, 1400, 0], span: 16500,
+    detail: { p: [-1300, 900, 2600], t: [-350, 300, 0] }, travel: 6160,
+    how: 'Same running gear as A (L40 ground track, 2 V-wheels, guide rollers), so it is simple and reliable. The look comes from the infill: horizontal slats, interrupted by two slanted stripes filled with vertical bars.',
+    structure: ['Leaf frame: 80×30 rails top and bottom, 80×30 stiles', '17 horizontal 80×30 slats (80 face to the street, ~75 mm gap)', 'Wide diagonal stripe (~1.2 m) and a narrow echo stripe: edged with slanted 30×30 and filled with vertical 30×30 at 110 mm pitch, accent colour', 'The slats are cut at the stripe edges and welded to them', 'Hidden on the inside face: two 80×30 verticals and L40 diagonals', 'Posts: “pinwheel” columns – 4 × 80×30 welded around each other into a closed 110×110 square, cast 800 mm into concrete'],
+    buy: HW_SLIDE,
+    space: 'At least 6.7 m of flat, level and clear space to the left of the opening.',
+    pros: ['The most modern look, still 100 % your steel', 'Strong graphic stripe can carry the company colour', 'Pinwheel columns look solid and clean (no visible lacing)', 'Same simple running gear as A'],
+    cons: ['Heaviest leaf (see weight), needs heavy-duty wheels ≥ 600 kg each', 'Slats catch more wind than pickets', 'Horizontal slats can be climbed like a ladder', 'Many angled cuts at the stripe edges'],
+    parts: Object.assign({
+      frame: P('Leaf frame', '80×30 box', 'Outer frame of the 6.50 m leaf.', true),
+      slats: P('Horizontal slats', '80×30 box, 80 face visible', '~75 mm gaps. Cut at the stripe edges and welded to the slanted edge bars.', true),
+      stripe: P('Diagonal stripes', '30×30 box, accent colour', 'Slanted 30×30 edges with vertical 30×30 infill at 110 mm pitch (80 mm gaps).', true),
+      hidden: P('Hidden verticals + bracing', '80×30 box + L40 angle, inside face', 'Not visible from the street. They stop the slats sagging and keep the leaf square.', true),
+      guide: P('Guide columns', '2 pinwheel columns (4 × 80×30 each) + 80×30 top tie', 'A 110×110 closed column made only from your 80×30. Tops closed with 80×30 offcuts. Cast 800 mm into the footing.'),
+      catch: P('Catch columns', '2 pinwheel columns + 80×30 tie', 'The leaf end slides in between when closed.')
+    }, SLIDE_PARTS)
   },
   {
-    id: 'C', kind: 'swing', budget: 'eco', short: 'Double swing, lattice pylons',
-    title: 'Swing · Budget: double leaf on lattice pylons',
-    tagline: 'Two 2.94 m leaves hung on pylons built entirely from your L40 and 30×30. There are no expensive columns to buy.',
-    paint: '#1a4a85', accent: '#f0ca00', center: [3000, 1300, 0], span: 12000,
+    id: 'C', kind: 'slide', budget: 'deco', short: 'Diamond lattice + crown',
+    title: 'Sliding · Decorative: diamond lattice with a toothed crown',
+    tagline: 'The whole leaf is a woven-looking lattice of 30×30 diamonds with a row of inner diamonds, topped by a crown of teeth and spikes.',
+    paint: '#1a4a85', accent: '#f0ca00', center: [-300, 1400, 0], span: 16500,
+    detail: { p: [-1300, 2400, 2600], t: [-350, 2000, 0] }, travel: 6160,
+    how: 'Same running gear as A (L40 ground track, 2 V-wheels, guide rollers). The diamond lattice also works as the bracing, so no extra diagonals are needed.',
+    structure: ['Leaf frame: 80×30 bottom rail, top rail at 2760 and stiles', 'Lattice: two families of 30×30 at ±60° (260 mm pitch) – one family continuous, the other cut and welded between', 'Medallion row: a small accent diamond welded inside each diamond at mid-height', 'Crown 2800–3000: accent zig-zag of 30×30 with a pinched 30×30 spike on every peak', 'Ladder portals: 2 × 80×30 with 30×30 X lacing, cast 800 mm into concrete'],
+    buy: HW_SLIDE,
+    space: 'At least 6.7 m of flat, level and clear space to the left of the opening.',
+    pros: ['The most decorative sliding option – “wrought-iron” feel from simple tube', 'Lattice is self-bracing and very stiff', 'Still 100 % your steel', 'See-through, low wind load'],
+    cons: ['Most welding: ~150 cut pieces and ~700 weld joints', 'Diamond openings are ~200 mm wide – hard to climb, but a child could pass', 'Needs a careful fitter to keep the pattern even'],
+    parts: Object.assign({
+      frame: P('Leaf frame', '80×30 box', 'Bottom rail upright (carries the wheels), top rail at 2760, stiles.', true),
+      lattice: P('Diamond lattice', '30×30 box', 'Two families at ±60°, 260 mm pitch. Diamonds are ~260 wide × 450 tall.', true),
+      medal: P('Inner diamonds', '30×30 box, accent colour', 'One small diamond in each diamond of the middle row.', true),
+      crown: P('Toothed crown', '30×30 box, accent colour', 'Zig-zag with 240 mm teeth and pinched spikes at 3.0 m – an anti-climb top.', true),
+      guide: P('Guide portal', '2 ladder posts (2 × 80×30 + 30×30 X lacing) + 80×30 tie', 'Holds the top of the leaf with nylon rollers.'),
+      catch: P('Catch portal', '2 ladder posts + 80×30 tie', 'The leaf end slides in between when closed.')
+    }, SLIDE_PARTS)
+  },
+  {
+    id: 'D', kind: 'swing', budget: 'eco', short: 'Arched pickets, lattice pylons',
+    title: 'Swing · Budget: arched pickets on lattice pylons',
+    tagline: 'Two leaves whose picket tops rise together into one arch, with an accent diamond band and lattice pylons made from L40 and 30×30.',
+    paint: '#1f4a38', accent: '#f0ca00', center: [3000, 1400, 0], span: 12000,
     detail: { p: [1300, 900, -2200], t: [100, 500, 0] }, travel: 0,
-    how: 'Two leaves open inwards by 90° on two heavy hinges each. A drop bolt and a centre stop hold them closed, and a lockbox joins the two leaves.',
-    structure: ['Pylons 300×300×3200: 4 × L40 corner angles with 30×30 battens every 500 mm and zig-zag lacing on all 4 faces', 'A flat 80×30 hinge column on the inner face of each pylon', 'Leaves: 80×30 frame. The top and mid rails are flat with punched holes. 30×30 pickets with spear tips', 'An L40 strut from the bottom hinge corner to the top free corner stops the leaf sagging'],
-    buy: ['4 × heavy adjustable hinges, ≥ 400 kg per pair', 'Drop bolt Ø16 + ground socket, centre stop, lockbox', '2 × base plates 420×420×12 with anchors, 2 cap plates', '2 footings 1.0 × 1.0 × 1.2 m', 'Hold-open hooks (keep the leaves from slamming in wind)', 'Zinc-rich primer + 2 coats of industrial enamel'],
+    how: 'Two 2.94 m leaves open inwards by 90° on two heavy hinges each. A drop bolt and a centre stop hold them closed, and a lockbox joins them.',
+    structure: ['Pylons 300×300: 4 × L40 corner legs with 30×30 battens and zig-zag lacing; pyramid cap of four 30×30 hips', 'An 80×30 hinge column on the inner face of each pylon', 'Leaves: 80×30 frame; flat 80×30 rails at 450, 1950 and 2300 with punched holes for the pickets', 'Picket tops follow one arch across both leaves: 2.70 m at the pylons, 3.00 m in the middle, tied by a 30×30 arch rail', 'Accent diamond band between 1950 and 2300', 'Short 30×30 “dog bars” between the pickets at the bottom (no gaps for animals)'],
+    buy: HW_SWING,
     space: 'A clear, flat 3 m swing area on the inside for each leaf. No side space is needed.',
-    pros: ['The cheapest build: even the posts come from your stock', 'No runback space needed', 'No moving parts on the ground', 'The lattice pylons look industrial and honest'],
-    cons: ['Needs a 3 m clear arc inside, so nothing can park there', 'Open leaves catch wind and need hold-open hooks', 'Manual by default (arm motors can be added later)', 'Lattice pylons take welding time: about 120 short pieces'],
-    parts: {
-      pylon: P('Lattice pylon', '4 × L40 corners, 30×30 battens + lacing', '300×300 mm, 3.2 m tall, on a 420×420×12 base plate with a 1.0 m cube footing.'),
-      column: P('Hinge column', '80×30 box, flat on the pylon inner face', 'The hinge plates are welded here.'),
-      frame: P('Leaf frame and rails', '80×30 box', 'Bottom rail and stiles upright. Top and mid rails flat with punched holes for the pickets.', true),
-      pickets: P('Pickets', '30×30 box', 'About 121 mm apart, which leaves a ~90 mm gap.', true),
-      tips: P('Spear tips', 'Pressed steel caps for 30×30 (buy)', 'Anti-climb top edge.', true),
-      brace: P('Anti-sag strut', 'L40 angle', 'Runs from the bottom hinge corner up to the top free corner. Because it works in compression, it holds the free end up.', true),
-      hinge: P('Heavy hinges', 'Buy: adjustable bolt hinges M24 or Ø40 bearing hinges', '2 per leaf, about 2.25 m apart.'),
-      drop: P('Drop bolt + centre stop', 'Buy: Ø16 drop bolt, ground socket', 'Holds the passive leaf in place.', true),
-      lock: P('Lockbox', 'Buy: double-gate lockbox', 'Joins the two leaves in the middle.', true),
-      found: P('Footing', 'C25/30 concrete', '1.0 × 1.0 × 1.2 m deep per pylon.')
-    }
+    pros: ['Cheapest swing option, even the pylons are your stock', 'The arch makes the entrance look finished and symmetric', 'No runback space or ground track', 'Picket gaps ~90 mm'],
+    cons: ['Needs a clear 3 m arc inside the gate', 'Open leaves catch wind: use the hold-open hooks', 'Lattice pylons take welding time'],
+    parts: Object.assign({
+      pylon: P('Lattice pylon', '4 × L40 legs, 30×30 battens + lacing, 30×30 hip cap', '300×300 mm, 3.2 m above ground, legs cast 800 mm into a 1.0 m cube footing.'),
+      column: P('Hinge column', '80×30 box on the pylon inner face', 'The hinges are welded here.'),
+      frame: P('Leaf frame and rails', '80×30 box', 'Bottom rail and stiles upright. Rails at 450, 1950 and 2300 lie flat with punched holes for the pickets.', true),
+      pickets: P('Pickets', '30×30 box, pinched points', '~121 mm pitch. The heights follow the arch.', true),
+      arch: P('Arch rail', '30×30 box, short straight pieces', 'Follows the arch 150 mm below the points and ties the picket tops.', true),
+      band: P('Diamond band', '30×30 box, accent colour', 'Diamonds welded to the street face of the pickets between the 1950 and 2300 rails.', true),
+      dog: P('Dog bars', '30×30 box', 'Short bars between the pickets below the 450 rail. They halve the bottom gaps.', true)
+    }, SWING_PARTS)
   },
   {
-    id: 'D', kind: 'swing', budget: 'pro', short: '“Barcode” swing, clad pillars',
-    title: 'Swing · Premium: “barcode” leaves between clad pillars',
-    tagline: 'An architectural entrance: an irregular rhythm of 80 and 30 mm bars in two colours, clad pillars with LED caps, a logo and an intercom.',
+    id: 'E', kind: 'swing', budget: 'pro', short: 'Mountain skyline, two layers',
+    title: 'Swing · Modern: “skyline” slats over vertical bars',
+    tagline: 'Two layers: a calm background of vertical 30×30 bars, and in front accent 80×30 slats that draw a stepped mountain skyline across both leaves.',
     paint: '#383e42', accent: '#8a4a2b', center: [3000, 1400, 0], span: 12500,
-    detail: { p: [1500, 1200, -2400], t: [0, 600, 0] }, travel: 0,
-    how: 'Two leaves open inwards by 90°, driven by concealed underground motors in the ground at the hinges. The pillars carry a logo plate, an intercom and LED caps.',
-    structure: ['Leaves: 80×30 frame. The infill is a mirrored “barcode” of 80×30 bars (main colour) and 30×30 bars (accent), with gaps of 45–95 mm', 'Hidden on the inside face: an 80×30 mid rail and an L40 anti-sag strut', 'Pillars 500×500×3400: an SHS 200×200×8 steel core in the footing, clad with 3 mm steel or porcelain panels', 'LED band under each pillar cap, ground up-lights, logo plate'],
-    buy: ['2 × SHS 200×200×8, 4.6 m long (core of the pillars)', 'Cladding: 3 mm steel (powder coated) or porcelain slabs + sub-frame', '4 × heavy hinges ≥ 500 kg per pair, or the motor kit\'s pivot set', '2 × underground swing motors with foundation boxes and drainage', 'LED caps, up-lights, logo plate, video intercom + keypad', 'Hot-dip galvanising + powder coat (2 colours)'],
-    space: 'A clear 3 m swing area on the inside, plus drainage for the motor boxes.',
-    pros: ['A striking, “architect-designed” company front', 'Uses a lot of your stock (both box sizes) in a modern way', 'The motors are invisible and there is no runback space', 'The two-tone colours can match your company branding'],
-    cons: ['The most expensive swing option (pillars, cladding, underground motors)', 'Needs a 3 m swing area inside', 'Underground motors need good drainage and service access'],
-    parts: {
-      pillar: P('Clad pillar', 'SHS 200×200×8 core + 3 mm cladding', '500×500×3400 mm. The steel core is set 1.2 m into a reinforced footing, and the hinges are welded to the core.'),
-      cap: P('Pillar cap + LED band', '3 mm steel cap, IP67 LED strip', 'A warm-white glow at night.'),
-      frame: P('Leaf frame', '80×30 box', 'Top and bottom rails and stiles, all 80 wide on the face.', true),
-      bar80: P('Wide bars', '80×30 box in the main colour', 'Part of the barcode rhythm. The leaves are mirror images of each other.', true),
-      bar30: P('Narrow bars', '30×30 box in the accent colour', 'They give the two-tone barcode look. Every gap is under 100 mm.', true),
-      hidden: P('Hidden mid rail + strut', '80×30 box + L40 angle, inside face', 'Not visible from the street. They stiffen the leaf and stop sagging.', true),
-      hinge: P('Heavy hinges', 'Buy, or the pivot set from the underground motor kit', '2 per leaf.'),
-      motor: P('Underground motor boxes', 'Buy: underground swing operator kit', 'Concealed under the hinge points. Needs a drain pipe.'),
-      sign: P('Logo plate', '3 mm laser-cut steel', 'Placeholder for the company logo.'),
-      intercom: P('Video intercom + keypad', 'Buy', 'On the right pillar, street side.'),
-      uplight: P('Ground up-lights', 'Buy: IP67 LED spots', 'Light up the pillars at night.'),
-      found: P('Footing', 'Reinforced C25/30 concrete', 'About 1.2 × 1.2 × 1.3 m per pillar.')
-    }
+    detail: { p: [1300, 1200, -2400], t: [0, 700, 0] }, travel: 0,
+    how: 'Two 2.94 m leaves open inwards by 90° on heavy hinges. They hang on twin pinwheel pylons: two closed 110×110 columns (each 4 × 80×30) tied together with 30×30 rungs.',
+    structure: ['Leaves: 80×30 frame, vertical 30×30 bars at 110 mm pitch (80 mm gap)', 'Front layer: accent 80×30 slats at 160 mm rows. Their lengths draw a skyline: one high peak in the middle, two lower peaks', 'Hidden on the inside face: L40 anti-sag strut', 'Pylons: two pinwheel columns per side (4 × 80×30 each), 380 mm wide overall, tied with 30×30 rungs; cast 800 mm into concrete, filled with grout'],
+    buy: HW_SWING,
+    space: 'A clear 3 m swing area on the inside for each leaf.',
+    pros: ['The most modern, “architect” look – still 100 % your steel', 'Two-layer depth gives shadows that change during the day', 'Accent colour can match the company brand', 'Background bars keep gaps at 80 mm'],
+    cons: ['Heavier leaves than D', 'Needs a 3 m swing area', 'The front slats can be used as steps – not for high-security sites'],
+    parts: Object.assign({
+      pylon: P('Twin pinwheel pylon', '2 × (4 × 80×30) columns + 30×30 rungs', 'Each column is a closed 110×110 square made from four 80×30. Cast 800 mm in, filled with grout, tops closed with 80×30 offcuts.'),
+      frame: P('Leaf frame', '80×30 box', 'Top and bottom rails and stiles.', true),
+      bars: P('Background bars', '30×30 box', '110 mm pitch, 80 mm gaps.', true),
+      sky: P('Skyline slats', '80×30 box, accent colour', 'Welded to the street face of the bars. Their ends step to draw the mountain outline.', true)
+    }, SWING_PARTS)
+  },
+  {
+    id: 'F', kind: 'swing', budget: 'deco', short: '“Sunrise” rays',
+    title: 'Swing · Decorative: “Sunrise” – rays and rings',
+    tagline: 'A rising sun across both leaves: a hub at the bottom centre, straight 30×30 rays fanning out to the frame and three rings in the accent colour.',
+    paint: '#18191b', accent: '#f0ca00', center: [3000, 1400, 0], span: 12000,
+    detail: { p: [4300, 900, 2600], t: [3000, 500, 0] }, travel: 0,
+    how: 'Two 2.94 m leaves open inwards by 90°. When closed, the two halves form one sun. The leaves hang on lattice pylons with X lacing.',
+    structure: ['Leaves: 80×30 frame', 'Hub: half-ring of 80×30 (r 450) at the bottom centre, with two inner 30×30 rings', 'Rays: 30×30 at 7.5° steps from the hub, with extra rays starting at the 1.4 m ring and at the 2.3 m ring, so the gaps stay even', 'Rings at r 1.4 m, 2.3 m and 3.2 m: 30×30 cut in short straight pieces (accent)', 'Pylons: 4 × L40 legs with 30×30 X lacing, 30×30 hip cap', 'Hidden L40 anti-sag strut on the inside face'],
+    buy: HW_SWING,
+    space: 'A clear 3 m swing area on the inside for each leaf.',
+    pros: ['A real eye-catcher, memorable company entrance', '100 % your steel', 'Rays and rings brace the leaf well'],
+    cons: ['Many angled cuts (~130 pieces per leaf); a jig on the floor is needed', 'Gaps between rays reach ~200 mm near the corners – decorative, not climb-proof', 'Needs a 3 m swing area'],
+    parts: Object.assign({
+      pylon: P('Lattice pylon', '4 × L40 legs, 30×30 battens + X lacing, 30×30 hip cap', '300×300 mm, 3.2 m above ground, legs cast 800 mm into the footing.'),
+      column: P('Hinge column', '80×30 box on the pylon inner face', 'The hinges are welded here.'),
+      frame: P('Leaf frame', '80×30 box', 'Top and bottom rails and stiles.', true),
+      hub: P('Sun hub', '80×30 half-ring + 30×30 inner rings, accent', 'Bottom centre of the gate; each leaf carries one quarter.', true),
+      rays: P('Rays', '30×30 box', 'Straight bars from the hub or a ring out to the frame.', true),
+      rings: P('Rings', '30×30 box, short straight pieces, accent', 'Radius 1.4, 2.3 and 3.2 m (the outer ring is cut off by the frame).', true)
+    }, SWING_PARTS)
   }
 ];
 const OPT = Object.fromEntries(OPTIONS.map(o => [o.id, o]));
@@ -177,11 +211,6 @@ function init() {
     const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = 8; return t;
   }
   const R0 = rng(7);
-  const cladTex = canvasTex(256, 512, (g, w, h) => {
-    g.fillStyle = '#3a3a3c'; g.fillRect(0, 0, w, h);
-    for (let i = 0; i < 2500; i++) { g.fillStyle = `rgba(${R0() < .5 ? 255 : 0},${R0() < .5 ? 255 : 0},${R0() < .5 ? 255 : 0},0.035)`; g.fillRect(R0() * w, R0() * h, 2 + R0() * 6, 1 + R0() * 3); }
-    g.fillStyle = '#1e1e20'; g.fillRect(0, h / 2 - 2, w, 4); g.fillRect(0, 0, w, 3);
-  });
   const fenceTex = canvasTex(64, 64, (g, w, h) => { g.clearRect(0, 0, w, h); g.strokeStyle = '#6c7a72'; g.lineWidth = 5; g.strokeRect(0, 0, w, h); });
   fenceTex.wrapS = fenceTex.wrapT = THREE.RepeatWrapping;
   const hatchTex = canvasTex(128, 128, (g, w, h) => { g.clearRect(0, 0, w, h); g.strokeStyle = 'rgba(255,205,0,0.85)'; g.lineWidth = 22; for (let i = -2; i < 4; i++) { g.beginPath(); g.moveTo(i * 64, h); g.lineTo(i * 64 + h, 0); g.stroke(); } });
@@ -200,30 +229,11 @@ function init() {
     vest: MSM(0xff7a00, { metalness: 0, roughness: 0.8 }),
     skin: MSM(0xd9a77e, { metalness: 0, roughness: 0.8 }),
     pants: MSM(0x2b3550, { metalness: 0, roughness: 0.9 }),
-    clad: MSM(0xffffff, { map: cladTex, metalness: 0.1, roughness: 0.55 }),
-    led: new THREE.MeshStandardMaterial({ color: 0xfff3d6, emissive: 0xffd590, emissiveIntensity: 0.5 }),
-    lamp: new THREE.MeshStandardMaterial({ color: 0xff8a00, emissive: 0xff6a00, emissiveIntensity: 0.2, transparent: true, opacity: 0.9 }),
     hl: new THREE.MeshStandardMaterial({ color: 0xffd34d, emissive: 0xb07800, emissiveIntensity: 0.9 }),
     fence: new THREE.MeshStandardMaterial({ map: fenceTex, transparent: true, alphaTest: 0.3, side: THREE.DoubleSide, metalness: 0.4, roughness: 0.5 }),
     hatch: new THREE.MeshBasicMaterial({ map: hatchTex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }),
     zone: new THREE.MeshBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.18, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, side: THREE.DoubleSide })
   };
-  function logoTex(accent, square) {
-    const w = square ? 512 : 1024, h = square ? 512 : 280;
-    return canvasTex(w, h, (g) => {
-      g.fillStyle = '#16181b'; g.fillRect(0, 0, w, h);
-      g.fillStyle = accent; g.fillRect(0, 0, square ? w : 40, square ? 26 : h);
-      g.fillStyle = '#ffffff'; g.textAlign = 'center'; g.textBaseline = 'middle';
-      if (square) {
-        g.strokeStyle = accent; g.lineWidth = 18; g.beginPath(); g.arc(w / 2, h / 2 - 30, 120, 0, 7); g.stroke();
-        g.font = '800 120px system-ui, sans-serif'; g.fillText('LOGO', w / 2, h / 2 - 30);
-        g.font = '600 46px system-ui, sans-serif'; g.fillText('COMPANY NAME', w / 2, h - 70);
-      } else {
-        g.font = '800 120px system-ui, sans-serif'; g.fillText('YOUR LOGO', w / 2 + 20, h / 2 - 30);
-        g.font = '500 48px system-ui, sans-serif'; g.fillStyle = '#d9dde3'; g.fillText('COMPANY NAME · INDUSTRIAL', w / 2 + 20, h / 2 + 70);
-      }
-    });
-  }
 
   /* ---------- text sprites + dimensions ---------- */
   const SPRITES = [];
@@ -316,17 +326,6 @@ function init() {
     return ctx;
   }
 
-  const tipGeo = new THREE.ConeGeometry(23, 60, 4); tipGeo.rotateY(Math.PI / 4);
-  function pickets(ctx, parent, x0, x1, y0, y1, part, s = 1) {
-    const n = Math.round((x1 - x0) / 120), p = (x1 - x0) / n;
-    for (let i = 0; i < n; i++) {
-      const x = s * (x0 + p * (i + 0.5));
-      ctx.bar(parent, [x, y0, 0], [x, y1, 0], 'B30', part);
-      const t = new THREE.Mesh(tipGeo, ctx.mats.paint); t.position.set(x, y1 + 30, 0); parent.add(t); ctx.tag(t, 'tips');
-    }
-    return n;
-  }
-
   /* ---------- surroundings ---------- */
   function fence(ctx, x0, x1, z, h = 2400) {
     const len = Math.abs(x1 - x0), g = new THREE.PlaneGeometry(len, h - 100);
@@ -351,108 +350,201 @@ function init() {
     m.rotation.x = -Math.PI / 2; m.position.set(x, 7, 0); ctx.marks.add(m);
   }
 
-  /* ================= A: sliding budget ================= */
-  function buildA(ctx) {
-    const { bar, box, cyl } = ctx, LA = 6440, x0c = -380;
-    const leaf = new THREE.Group(); leaf.position.x = x0c; ctx.root.add(leaf);
+  /* ================= shared helpers (stock only: B80, B30, L40) ================= */
+  const LA = 6500, X0 = -380, TRAVEL = 6160;
+  function clip(p, q, r) {
+    let t0 = 0, t1 = 1; const dx = q[0] - p[0], dy = q[1] - p[1];
+    const chk = (pp, qq) => {
+      if (pp === 0) return qq >= 0;
+      const t = qq / pp;
+      if (pp < 0) { if (t > t1) return false; if (t > t0) t0 = t; } else { if (t < t0) return false; if (t < t1) t1 = t; }
+      return true;
+    };
+    if (chk(-dx, p[0] - r[0]) && chk(dx, r[2] - p[0]) && chk(-dy, p[1] - r[1]) && chk(dy, r[3] - p[1]))
+      return [[p[0] + t0 * dx, p[1] + t0 * dy], [p[0] + t1 * dx, p[1] + t1 * dy]];
+    return null;
+  }
+  // 2D member in the leaf plane, optionally clipped to a rect and mirrored (s = -1)
+  function seg(ctx, parent, p, q, sec, part, o = {}) {
+    const s = o.s || 1, z = o.z || 0;
+    const c = o.rect ? clip(p, q, o.rect) : [p, q]; if (!c) return null;
+    const [a, b] = c; if (Math.hypot(b[0] - a[0], b[1] - a[1]) < (o.min || 25)) return null;
+    return ctx.bar(parent, [s * a[0], a[1], z], [s * b[0], b[1], z], sec, part, o);
+  }
+  function poly(ctx, parent, pts, sec, part, o = {}) { for (let i = 0; i < pts.length - 1; i++) seg(ctx, parent, pts[i], pts[i + 1], sec, part, o); }
+  const tipGeo = new THREE.ConeGeometry(23, 60, 4); tipGeo.rotateY(Math.PI / 4);
+  function tip(ctx, parent, x, yTop, part, o = {}) {
+    const t = new THREE.Mesh(tipGeo, o.mat || ctx.mats.paint); t.position.set(x, yTop - 30, o.z || 0);
+    if (o.wide) t.scale.set(2.46, 1, 0.92);
+    parent.add(t); ctx.tag(t, part);
+  }
+  function diamond(ctx, parent, cx, cy, hw, hh, part, o) {
+    poly(ctx, parent, [[cx - hw, cy], [cx, cy + hh], [cx + hw, cy], [cx, cy - hh], [cx - hw, cy]], 'B30', part, o);
+  }
+  function arc(cx, cy, r, a0, a1, n) {
+    const pts = []; for (let i = 0; i <= n; i++) { const a = (a0 + (a1 - a0) * i / n) * Math.PI / 180; pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
+    return pts;
+  }
+
+  /* ---------- posts made from stock ---------- */
+  // ladder post: 2 × 80×30 uprights + 30×30 lacing, cast 800 mm into concrete
+  function ladderPost(ctx, xc, z, part, lace) {
+    const P = ctx.root, xa = xc - 110, xb = xc + 110, top = 3190;
+    ctx.bar(P, [xa, -800, z], [xa, top, z], 'B80', part);
+    ctx.bar(P, [xb, -800, z], [xb, top, z], 'B80', part);
+    const lv = []; for (let y = 120; y <= 3070; y += 421) lv.push(y);
+    lv.forEach(y => ctx.bar(P, [xa + 40, y, z], [xb - 40, y, z], 'B30', part));
+    for (let i = 0; i < lv.length - 1; i++) {
+      const [u, v] = i % 2 ? [xa + 40, xb - 40] : [xb - 40, xa + 40];
+      ctx.bar(P, [u, lv[i] + 15, z], [v, lv[i + 1] - 15, z], 'B30', part);
+      if (lace === 'x') ctx.bar(P, [v, lv[i] + 15, z], [u, lv[i + 1] - 15, z], 'B30', part);
+    }
+  }
+  function ladderPortal(ctx, xc, part, lace, ry, rz) {
+    [-115, 115].forEach(z => ladderPost(ctx, xc, z, part, lace));
+    [xc - 110, xc + 110].forEach(x => ctx.bar(ctx.root, [x, 3150, -130], [x, 3150, 130], 'B80', part));
+    ctx.box(ctx.root, [700, 6, 900], [xc, 3, 0], M.concrete, 'found');
+    if (part === 'guide') [-rz, rz].forEach(z => ctx.cyl(ctx.root, 30, 40, [xc, ry, z], M.nylon, 'rollers'));
+    else ctx.box(ctx.root, [60, 200, 50], [xc - 60, 1100, -70], M.dark, 'lock');
+  }
+  // pinwheel column: 4 × 80×30 welded around each other = closed 110×110
+  function pinwheel(ctx, P, xc, zc, y1, part) {
+    const b = (cx, cz, turn) => ctx.bar(P, [cx, -800, cz], [cx, y1, cz], 'B80', part, turn ? { depth: V(1, 0, 0) } : {});
+    b(xc - 15, zc + 40); b(xc + 40, zc + 15, 1); b(xc + 15, zc - 40); b(xc - 40, zc - 15, 1);
+    ctx.box(P, [110, 8, 110], [xc, y1 + 4, zc], ctx.mats.paint, part); ctx.count('B80', 110, part, 2);
+  }
+  function pinwheelPortal(ctx, xc, part, ry) {
+    [-110, 110].forEach(z => pinwheel(ctx, ctx.root, xc, z, 3150, part));
+    ctx.bar(ctx.root, [xc, 3198, -165], [xc, 3198, 165], 'B80', part);
+    ctx.box(ctx.root, [700, 6, 900], [xc, 3, 0], M.concrete, 'found');
+    if (part === 'guide') [-35, 35].forEach(z => ctx.cyl(ctx.root, 20, 40, [xc, ry, z], M.nylon, 'rollers'));
+    else ctx.box(ctx.root, [50, 200, 40], [xc - 70, 1100, -40], M.dark, 'lock');
+  }
+  // lattice pylon: 4 × L40 legs, 30×30 battens + lacing, 30×30 hip cap, no plates
+  function latticePylon(ctx, cx, part, lace) {
+    const { bar } = ctx, c = 150;
+    [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([dx, dz]) => {
+      bar(ctx.root, [cx + dx * c, -800, dz * c], [cx + dx * c, 3200, dz * c], 'L40', part, { ls: [dx, -dz] });
+      bar(ctx.root, [cx + dx * (c - 20), 3200, dz * (c - 20)], [cx, 3460, 0], 'B30', part);
+    });
+    const levels = []; for (let y = 150; y <= 3150; y += 500) levels.push(y);
+    const faces = [[V(cx - c + 17, 0, -c), V(cx - c + 17, 0, c)], [V(cx + c - 17, 0, -c), V(cx + c - 17, 0, c)], [V(cx - c, 0, -c + 17), V(cx + c, 0, -c + 17)], [V(cx - c, 0, c - 17), V(cx + c, 0, c - 17)]];
+    faces.forEach(([a, b]) => {
+      levels.forEach(y => bar(ctx.root, [a.x, y, a.z], [b.x, y, b.z], 'B30', part));
+      for (let i = 0; i < levels.length - 1; i++) {
+        const [p, q] = i % 2 ? [a, b] : [b, a];
+        bar(ctx.root, [p.x, levels[i] + 15, p.z], [q.x, levels[i + 1] - 15, q.z], 'B30', part);
+        if (lace === 'x') bar(ctx.root, [q.x, levels[i] + 15, q.z], [p.x, levels[i + 1] - 15, p.z], 'B30', part);
+      }
+    });
+    ctx.box(ctx.root, [1000, 6, 1000], [cx, 3, 0], M.concrete, 'found');
+    const sx = cx < 3000 ? 1 : -1;
+    bar(ctx.root, [cx + sx * (c - 15), 12, 0], [cx + sx * (c - 15), 3200, 0], 'B80', 'column', { turn: true });
+  }
+
+  /* ---------- sliding running gear (A, B, C) ---------- */
+  function slideLeaf(ctx) { const leaf = new THREE.Group(); leaf.position.x = X0; ctx.root.add(leaf); return leaf; }
+  function slideGear(ctx, leaf) {
+    const { box, cyl, bar } = ctx, wheels = [];
     bar(leaf, [0, 185, 0], [LA, 185, 0], 'B80', 'frame');
-    bar(leaf, [0, 2800, 0], [LA, 2800, 0], 'B80', 'frame', { turn: true });
-    bar(leaf, [80, 1500, 0], [LA - 80, 1500, 0], 'B80', 'frame', { turn: true });
-    bar(leaf, [40, 225, 0], [40, 2785, 0], 'B80', 'frame');
-    bar(leaf, [LA - 40, 225, 0], [LA - 40, 2785, 0], 'B80', 'frame');
-    pickets(ctx, leaf, 80, LA - 80, 225, 2940, 'pickets');
-    bar(leaf, [80, 225, -15], [LA / 2, 1485, -15], 'L40', 'brace', { ls: [1, -1] });
-    bar(leaf, [LA - 80, 225, -15], [LA / 2, 1485, -15], 'L40', 'brace', { ls: [1, -1] });
-    const wheels = [];
     [450, LA - 450].forEach(x => {
       const w = cyl(leaf, 60, 28, [x, 78, 0], M.dark, 'wheels', 'z', 24); wheels.push(w);
       const spoke = new THREE.Mesh(boxGeo(100, 14, 30), M.galv); w.add(spoke); spoke.userData = w.userData;
       box(leaf, [170, 90, 8], [x, 100, 22], M.galv, 'wheels'); box(leaf, [170, 90, 8], [x, 100, -22], M.galv, 'wheels');
     });
-    box(leaf, [140, 200, 60], [LA - 180, 1100, -50], M.dark, 'lock');
-    // track + strip
-    bar(ctx.root, [-6650, 28, 0], [6080, 28, 0], 'L40', 'rail', { depth: V(0, -1, 1), ls: [-1, 1], mat: M.galv });
-    box(ctx.root, [12800, 8, 300], [-285, 4, 0], M.concrete, 'found');
-    // portals
-    function portal(xc, part) {
-      [-115, 115].forEach(z => {
-        bar(ctx.root, [xc, 12, z], [xc, 3150, z], 'B80', part);
-        box(ctx.root, [250, 12, 250], [xc, 6, z], M.galv, part);
-        box(ctx.root, [600, 6, 600], [xc, 3, z], M.concrete, 'found');
-      });
-      bar(ctx.root, [xc, 3110, -130], [xc, 3110, 130], 'B80', part);
-    }
-    portal(-40, 'guide'); portal(6040, 'catch');
-    [-70, 70].forEach(z => { cyl(ctx.root, 30, 40, [-40, 2800, z], M.nylon, 'rollers'); cyl(ctx.root, 30, 40, [6040, 2800, z], M.nylon, 'rollers'); });
-    box(ctx.root, [60, 200, 120], [6000 + 10, 1100, -60], M.dark, 'lock');
-    // end stop
-    bar(ctx.root, [-6540, 12, 0], [-6540, 1000, 0], 'B80', 'stop');
-    box(ctx.root, [60, 120, 60], [-6480, 185, 0], M.rubber, 'stop');
-    box(ctx.root, [250, 12, 250], [-6540, 6, 0], M.galv, 'stop');
-    ctx.movers.push(t => { leaf.position.x = x0c - 6080 * t; wheels.forEach(w => w.rotation.z = 6080 * t / 60); });
-    // marks, dims, labels, env
-    hatchZone(ctx, -6600, 0, -350, 350);
+    box(leaf, [140, 200, 60], [LA - 200, 1100, -50], M.dark, 'lock');
+    bar(ctx.root, [-6720, 28, 0], [6200, 28, 0], 'L40', 'rail', { depth: V(0, -1, 1), ls: [-1, 1], mat: M.galv });
+    box(ctx.root, [12920, 8, 300], [-260, 4, 0], M.concrete, 'found');
+    bar(ctx.root, [-6640, -800, 0], [-6640, 1000, 0], 'B80', 'stop');
+    box(ctx.root, [60, 120, 60], [-6580, 185, 0], M.rubber, 'stop');
+    ctx.movers.push(t => { leaf.position.x = X0 - TRAVEL * t; wheels.forEach(w => w.rotation.z = TRAVEL * t / 60); });
+    hatchZone(ctx, -6700, 0, -350, 350);
     addDim(ctx.dims, [0, 20, 450], [6000, 20, 450], [0, 0, 0], 'Clear opening 6000');
-    addDim(ctx.dims, [6250, 0, 300], [6250, 3000, 300], [0, 0, 0], 'Height 3000', '#ffd34d', [500, 0, 0]);
-    addDim(ctx.dims, [x0c, 3000, 0], [x0c + LA, 3000, 0], [0, 350, 0], 'Leaf 6440');
-    addDim(ctx.dims, [-6600, 20, -700], [0, 20, -700], [0, 0, 0], 'Runback ≥ 6600 (keep clear)', '#7fe0ff');
-    ctx.label([-40, 3500, 0], 'Guide portal'); ctx.label([6040, 3500, 0], 'Catch portal'); ctx.label([-3200, 300, 600], 'L40 ground track');
-    ctx.label([70, 400, 400], 'V-wheel Ø120'); ctx.label([LA / 4 + x0c, 1100, -300], 'L40 diagonal'); ctx.label([3000, 2300, 300], '30×30 pickets');
-    road(ctx); fence(ctx, -14000, -160, 300); fence(ctx, 6200, 16000, 0);
+    addDim(ctx.dims, [6450, 0, 300], [6450, 3000, 300], [0, 0, 0], 'Height 3000', '#ffd34d', [500, 0, 0]);
+    addDim(ctx.dims, [X0, 3000, 0], [X0 + LA, 3000, 0], [0, 450, 0], 'Leaf 6500');
+    addDim(ctx.dims, [-6700, 20, -700], [0, 20, -700], [0, 0, 0], 'Runback ≥ 6700 (keep clear)', '#7fe0ff');
+    ctx.label([X0 + 450, 450, 450], 'V-wheel'); ctx.label([-3300, 300, 600], 'L40 ground track');
+    road(ctx); fence(ctx, -14000, -320, 300); fence(ctx, 6350, 16000, 0);
   }
 
-  /* ================= B: cantilever premium ================= */
+  /* ================= A: sliding budget – scalloped pickets ================= */
+  function buildA(ctx) {
+    const { bar } = ctx, leaf = slideLeaf(ctx), posts = [40, LA / 3, 2 * LA / 3, LA - 40];
+    posts.forEach((x, i) => { bar(leaf, [x, 225, 0], [x, 2940, 0], 'B80', i % 3 ? 'bay' : 'frame'); tip(ctx, leaf, x, 3000, i % 3 ? 'bay' : 'frame', { wide: true }); });
+    [1000, 1400, 2500].forEach(y => bar(leaf, [80, y, 0], [LA - 80, y, 0], 'B80', 'frame', { turn: true }));
+    for (let j = 0; j < 3; j++) {
+      const xs = posts[j], xe = posts[j + 1], top = x => 2780 + 220 * (1 - Math.sin(Math.PI * (x - xs) / (xe - xs)));
+      const a = xs + 40, b = xe - 40, n = Math.round((b - a) / 121), p = (b - a) / n;
+      for (let i = 0; i < n; i++) { const x = a + p * (i + 0.5), y = top(x); bar(leaf, [x, 225, 0], [x, y - 60, 0], 'B30', 'pickets'); tip(ctx, leaf, x, y, 'pickets'); }
+      const pts = []; for (let i = 0; i <= 8; i++) { const x = a + (b - a) * i / 8; pts.push([x, top(x) - 150]); }
+      poly(ctx, leaf, pts, 'B30', 'scallop');
+    }
+    const nd = 13, w = (LA - 160) / nd;
+    for (let i = 0; i < nd; i++) diamond(ctx, leaf, 80 + w * (i + 0.5), 1200, w / 2, 185, 'band', { z: 30, mat: ctx.mats.accent });
+    bar(leaf, [80, 225, -35], [LA / 3 - 40, 2485, -35], 'L40', 'brace', { ls: [1, -1] });
+    bar(leaf, [LA - 80, 225, -35], [2 * LA / 3 + 40, 2485, -35], 'L40', 'brace', { ls: [1, -1] });
+    slideGear(ctx, leaf);
+    ladderPortal(ctx, -150, 'guide', 'zig', 2500, 70); ladderPortal(ctx, 6150, 'catch', 'zig');
+    ctx.label([-150, 3550, 0], 'Ladder guide portal'); ctx.label([6150, 3550, 0], 'Catch portal');
+    ctx.label([X0 + LA / 6, 3250, 200], 'Scalloped tops'); ctx.label([X0 + LA / 2, 1200, 400], '30×30 diamond band'); ctx.label([X0 + LA / 3, 2100, 300], '80×30 bay post');
+  }
+
+  /* ================= B: sliding modern – slats + diagonal stripe ================= */
   function buildB(ctx) {
-    const { bar, box, cyl } = ctx, LP = 6300, LT = 2600, x0c = -220;
-    const leaf = new THREE.Group(); leaf.position.x = x0c; ctx.root.add(leaf);
-    bar(leaf, [-LT, 105, 0], [LP, 105, 0], 'CP', 'track', { mat: M.galv });
-    bar(leaf, [0, 190, 0], [LP, 190, 0], 'B80', 'frame');
-    bar(leaf, [0, 2960, 0], [LP, 2960, 0], 'B80', 'frame');
-    bar(leaf, [40, 230, 0], [40, 2920, 0], 'B80', 'frame');
-    bar(leaf, [LP - 40, 230, 0], [LP - 40, 2920, 0], 'B80', 'frame');
-    const n = 21, gap = (2690 - n * 80) / (n + 1);
-    for (let i = 0; i < n; i++) { const y = 230 + gap * (i + 1) + 80 * i + 40; bar(leaf, [80, y, 0], [LP - 80, y, 0], 'B80', 'slats'); }
-    [LP / 3, 2 * LP / 3].forEach(x => bar(leaf, [x, 230, -30], [x, 2920, -30], 'B80', 'hidden', { mat: ctx.mats.paint }));
-    bar(leaf, [80, 230, -45], [LP / 3 - 40, 2920, -45], 'L40', 'hidden', { ls: [1, -1] });
-    bar(leaf, [LP - 80, 230, -45], [2 * LP / 3 + 40, 2920, -45], 'L40', 'hidden', { ls: [1, -1] });
-    // tail truss
-    const yc = x => 2920 + (x / LT) * 2320;
-    bar(leaf, [-LT, 190, 0], [0, 190, 0], 'B80', 'tail');
-    bar(leaf, [0, 2920, 0], [-LT, 600, 0], 'B80', 'tail');
-    bar(leaf, [-LT + 40, 230, 0], [-LT + 40, 560, 0], 'B80', 'tail');
-    const xs = [-LT + 80, -1950, -1300, -650, 0];
-    for (let i = 1; i < xs.length - 1; i++) bar(leaf, [xs[i], 230, 0], [xs[i], yc(xs[i]) - 40, 0], 'B30', 'tail');
-    for (let i = 0; i < xs.length - 1; i++) bar(leaf, [xs[i], 230, 0], [xs[i + 1] - 20, yc(xs[i + 1]) - 60, 0], 'B30', 'tail');
-    // logo + LED + rack
-    const logoMat = new THREE.MeshStandardMaterial({ map: logoTex(ctx.opt.accent), emissive: 0xffffff, emissiveIntensity: 0.05, metalness: 0.3, roughness: 0.4 });
-    logoMat.emissiveMap = logoMat.map; ctx.mats.logo = logoMat;
-    box(leaf, [1900, 520, 4], [LP * 0.64, 2080, 18], logoMat, 'logo');
-    box(leaf, [LP - 160, 12, 6], [LP / 2, 2935, 18], M.led, 'led');
-    box(leaf, [LP - 300, 30, 12], [LP / 2, 245, -24], M.galv, 'rack');
-    // carriages + foundation
-    [-350, -2550].forEach(x => { box(ctx.root, [260, 60, 150], [x, 30, 0], M.galv, 'carriage'); box(ctx.root, [320, 10, 260], [x, 5, 0], M.galv, 'carriage'); });
-    box(ctx.root, [2800, 6, 700], [-1450, 3, 0], M.concrete, 'found');
-    // posts
-    [-125, 125].forEach(z => { bar(ctx.root, [-60, 0, z], [-60, 3120, z], 'S120', 'guide', { mat: ctx.mats.paint }); box(ctx.root, [700, 6, 700], [-60, 3, z], M.concrete, 'found'); });
-    box(ctx.root, [140, 60, 380], [-60, 3090, 0], ctx.mats.paint, 'guide');
-    [-40, 40].forEach(z => cyl(ctx.root, 25, 40, [-60, 2960, z], M.nylon, 'guide'));
-    const lamp = cyl(ctx.root, 60, 130, [-60, 3185, 125], M.lamp, 'lamp');
-    bar(ctx.root, [6060, 0, -160], [6060, 3120, -160], 'S120', 'catch', { mat: ctx.mats.paint });
-    box(ctx.root, [700, 6, 700], [6060, 3, -160], M.concrete, 'found');
-    box(ctx.root, [120, 60, 220], [6060, 2960, -60], ctx.mats.paint, 'catch');
-    [-30, 30].forEach(z => box(ctx.root, [120, 120, 10], [6060, 2960, z], ctx.mats.paint, 'catch'));
-    box(ctx.root, [160, 80, 260], [6060, 60, -60], M.galv, 'catch');
-    box(ctx.root, [330, 380, 250], [-1050, 190, -230], M.dark, 'motor');
-    box(ctx.root, [60, 100, 50], [-60, 500, 200], M.dark, 'lamp'); box(ctx.root, [60, 100, 50], [6060, 500, -260], M.dark, 'lamp');
-    ctx.movers.push(t => { leaf.position.x = x0c - 6180 * t; const moving = Math.abs(state.target - t) > 0.002; M.lamp.emissiveIntensity = moving ? (Math.sin(performance.now() / 120) > 0 ? 2.5 : 0.2) : 0.2; });
-    hatchZone(ctx, -9200, 0, -400, 400);
-    addDim(ctx.dims, [0, 20, 450], [6000, 20, 450], [0, 0, 0], 'Clear opening 6000');
-    addDim(ctx.dims, [6300, 0, 300], [6300, 3000, 300], [0, 0, 0], 'Height 3000', '#ffd34d', [500, 0, 0]);
-    addDim(ctx.dims, [x0c - LT, 3000, 0], [x0c + LP, 3000, 0], [0, 400, 0], 'Leaf 8900 = panel 6300 + tail 2600');
-    addDim(ctx.dims, [-9200, 20, -800], [0, 20, -800], [0, 0, 0], 'Runback ≈ 9200 (keep clear)', '#7fe0ff');
-    ctx.label([-60, 3600, 0], 'Guide posts + lamp'); ctx.label([-1450, 300, 700], 'Carriages on foundation'); ctx.label([x0c - 1500, 1500, 300], 'Counterbalance tail');
-    ctx.label([x0c + LP * 0.64, 2600, 300], 'Backlit logo'); ctx.label([6060, 3500, -160], 'Catch post'); ctx.label([-1050, 700, -400], 'Motor');
-    road(ctx); fence(ctx, -16000, -300, 300); fence(ctx, 6200, 18000, 0);
+    const { bar } = ctx, leaf = slideLeaf(ctx), y0 = 225, y1 = 2920, xl = 80, xr = LA - 80, k = 0.95, XC = 1500;
+    const xc = y => XC + (y - y0) * k, bands = [[0, 600], [1050, 150]];
+    bar(leaf, [0, 2960, 0], [LA, 2960, 0], 'B80', 'frame');
+    [40, LA - 40].forEach(x => bar(leaf, [x, y0, 0], [x, y1, 0], 'B80', 'frame'));
+    const n = 17, gap = (y1 - y0 - n * 80) / (n + 1);
+    for (let i = 0; i < n; i++) {
+      const y = y0 + gap * (i + 1) + 80 * i + 40; let x = xl;
+      bands.forEach(([off, h]) => { const e = xc(y) + off - h - 20; if (e - x > 40) bar(leaf, [x, y, 0], [e, y, 0], 'B80', 'slats'); x = xc(y) + off + h + 20; });
+      if (xr - x > 40) bar(leaf, [x, y, 0], [xr, y, 0], 'B80', 'slats');
+    }
+    const acc = { mat: ctx.mats.accent, rect: [xl, y0, xr, y1] };
+    bands.forEach(([off, h]) => {
+      [-h, h].forEach(d => seg(ctx, leaf, [xc(y0) + off + d, y0], [xc(y1) + off + d, y1], 'B30', 'stripe', acc));
+      const hh = h - 20;
+      for (let x = xl + 55; x < xr; x += 110) {
+        const ya = Math.max(y0, y0 + (x - off - hh - XC) / k), yb = Math.min(y1, y0 + (x - off + hh - XC) / k);
+        if (yb - ya > 40) bar(leaf, [x, ya, 0], [x, yb, 0], 'B30', 'stripe', { mat: ctx.mats.accent });
+      }
+    });
+    [LA / 3, 2 * LA / 3].forEach(x => bar(leaf, [x, y0, -30], [x, y1, -30], 'B80', 'hidden'));
+    bar(leaf, [xl, y0, -45], [LA / 3 - 40, y1, -45], 'L40', 'hidden', { ls: [1, -1] });
+    bar(leaf, [xr, y0, -45], [2 * LA / 3 + 40, y1, -45], 'L40', 'hidden', { ls: [1, -1] });
+    slideGear(ctx, leaf);
+    pinwheelPortal(ctx, -80, 'guide', 2960); pinwheelPortal(ctx, 6080, 'catch');
+    ctx.label([-80, 3550, 0], 'Pinwheel columns\n4 × 80×30'); ctx.label([6080, 3550, 0], 'Catch columns');
+    ctx.label([X0 + 2900, 1700, 300], 'Accent stripe\n30×30 verticals'); ctx.label([X0 + 5600, 900, 300], '80×30 slats');
+  }
+
+  /* ================= C: sliding decorative – diamond lattice + crown ================= */
+  function buildC(ctx) {
+    const { bar } = ctx, leaf = slideLeaf(ctx), xl = 80, xr = LA - 80, y0 = 225, y1 = 2720, m = Math.tan(Math.PI / 3), p = 260, cx0 = LA / 2;
+    bar(leaf, [80, 2760, 0], [LA - 80, 2760, 0], 'B80', 'frame');
+    const rect = [xl, y0, xr, y1], H = 3000;
+    for (let k = -40; k <= 40; k++) {
+      const c = cx0 + k * p;
+      seg(ctx, leaf, [c, y0], [c + H / m, y0 + H], 'B30', 'lattice', { rect, min: 40 });
+      seg(ctx, leaf, [c, y0], [c - H / m, y0 + H], 'B30', 'lattice', { rect, min: 40 });
+    }
+    const yc = y0 + m * 5 * p / 2, hh = m * p / 2;
+    for (let i = -11; i <= 11; i++) {
+      const x = cx0 + i * p;
+      diamond(ctx, leaf, x, yc, p / 4, hh / 2, 'medal', { mat: ctx.mats.accent });
+      bar(leaf, [x, yc + hh / 2, 0], [x, yc + hh - 20, 0], 'B30', 'medal', { mat: ctx.mats.accent });
+      bar(leaf, [x, yc - hh + 20, 0], [x, yc - hh / 2, 0], 'B30', 'medal', { mat: ctx.mats.accent });
+    }
+    const nt = 26, pt = (xr - xl) / nt, zz = [];
+    for (let i = 0; i <= 2 * nt; i++) zz.push([xl + pt * i / 2, i % 2 ? 2930 : 2815]);
+    poly(ctx, leaf, zz, 'B30', 'crown', { mat: ctx.mats.accent });
+    for (let i = 0; i < nt; i++) { const x = xl + pt * (i + 0.5); bar(leaf, [x, 2815, 0], [x, 2940, 0], 'B30', 'crown', { mat: ctx.mats.accent }); tip(ctx, leaf, x, 3000, 'crown', { mat: ctx.mats.accent }); }
+    [40, LA - 40].forEach(x => { bar(leaf, [x, y0, 0], [x, 2940, 0], 'B80', 'frame'); tip(ctx, leaf, x, 3000, 'frame', { wide: true }); });
+    slideGear(ctx, leaf);
+    ladderPortal(ctx, -150, 'guide', 'x', 2760, 45); ladderPortal(ctx, 6150, 'catch', 'x');
+    ctx.label([-150, 3550, 0], 'Ladder portal, X lacing'); ctx.label([6150, 3550, 0], 'Catch portal');
+    ctx.label([X0 + LA / 2, 3300, 200], 'Toothed crown'); ctx.label([X0 + LA * 0.75, 2100, 300], '±60° diamond lattice'); ctx.label([X0 + LA * 0.3, yc, 400], 'Inner diamonds');
   }
 
   /* ================= swing helpers ================= */
@@ -460,116 +552,119 @@ function init() {
     const pivots = [];
     [[35, 1], [5965, -1]].forEach(([px, s]) => {
       const pv = new THREE.Group(); pv.position.x = px; ctx.root.add(pv); pivots.push(pv);
-      fill(pv, s);
+      const X = x => s * x;
+      fill(pv, s, X);
+      [400, 2550].forEach(y => { ctx.cyl(pv, 25, 140, [0, y, 0], M.galv, 'hinge'); ctx.box(pv, [60, 60, 20], [X(-5), y, 0], M.galv, 'hinge'); });
+      if (s < 0) ctx.cyl(pv, 9, 1000, [X(2900), 400, -45], M.galv, 'drop');
+      else ctx.box(pv, [140, 200, 60], [X(2880), 1100, -50], M.dark, 'lock');
     });
     ctx.movers.push(t => { pivots[0].rotation.y = t * Math.PI / 2; pivots[1].rotation.y = -t * Math.PI / 2; });
     swingZone(ctx, 35, 2960, false); swingZone(ctx, 5965, 2960, true);
+    ctx.box(ctx.root, [120, 8, 120], [3000, 4, -60], M.galv, 'drop');
+    addDim(ctx.dims, [0, 20, 500], [6000, 20, 500], [0, 0, 0], 'Clear opening 6000');
+    addDim(ctx.dims, [6650, 0, 300], [6650, 3000, 300], [0, 0, 0], 'Height 3000', '#ffd34d', [500, 0, 0]);
+    addDim(ctx.dims, [50, 3000, 0], [2990, 3000, 0], [0, 450, 0], 'Leaf 2940');
+    addDim(ctx.dims, [3010, 3000, 0], [5950, 3000, 0], [0, 450, 0], 'Leaf 2940');
+    addDim(ctx.dims, [35, 20, -150], [35, 20, -2960], [0, 0, 0], 'Swing radius 2960 (keep clear)', '#7fe0ff');
+    ctx.label([300, 400, -400], 'Heavy hinges'); ctx.label([3000, 600, -400], 'Drop bolt + stop');
+    road(ctx); fence(ctx, -14000, -420, 0); fence(ctx, 6420, 14000, 0);
     return pivots;
   }
-
-  /* ================= C: swing budget ================= */
-  function buildC(ctx) {
-    const { bar, box, cyl } = ctx;
-    function pylon(cx, part) {
-      const c = 150;
-      [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([dx, dz]) => bar(ctx.root, [cx + dx * c, 12, dz * c], [cx + dx * c, 3200, dz * c], 'L40', part, { ls: [dx, -dz] }));
-      const levels = []; for (let y = 150; y <= 3150; y += 500) levels.push(y);
-      const faces = [[V(cx - c + 17, 0, -c), V(cx - c + 17, 0, c)], [V(cx + c - 17, 0, -c), V(cx + c - 17, 0, c)], [V(cx - c, 0, -c + 17), V(cx + c, 0, -c + 17)], [V(cx - c, 0, c - 17), V(cx + c, 0, c - 17)]];
-      faces.forEach(([a, b]) => {
-        levels.forEach(y => bar(ctx.root, [a.x, y, a.z], [b.x, y, b.z], 'B30', part));
-        for (let i = 0; i < levels.length - 1; i++) {
-          const [p, q] = i % 2 ? [a, b] : [b, a];
-          bar(ctx.root, [p.x, levels[i] + 15, p.z], [q.x, levels[i + 1] - 15, q.z], 'B30', part);
-        }
-      });
-      box(ctx.root, [420, 12, 420], [cx, 6, 0], M.galv, part);
-      box(ctx.root, [1000, 6, 1000], [cx, 3, 0], M.concrete, 'found');
-      box(ctx.root, [340, 10, 340], [cx, 3205, 0], ctx.mats.paint, part);
-      const cap = new THREE.Mesh(new THREE.ConeGeometry(235, 140, 4), ctx.mats.paint); cap.rotation.y = Math.PI / 4; cap.position.set(cx, 3280, 0); ctx.root.add(cap); ctx.tag(cap, part);
-      const sx = cx < 3000 ? 1 : -1;
-      bar(ctx.root, [cx + sx * (c - 15), 12, 0], [cx + sx * (c - 15), 3200, 0], 'B80', 'column', { turn: true });
+  function swingFrame(ctx, pv, X, topRail = true) {
+    ctx.bar(pv, [X(15), 120, 0], [X(2955), 120, 0], 'B80', 'frame');
+    if (topRail) {
+      ctx.bar(pv, [X(15), 2960, 0], [X(2955), 2960, 0], 'B80', 'frame');
+      [55, 2915].forEach(x => ctx.bar(pv, [X(x), 160, 0], [X(x), 2920, 0], 'B80', 'frame'));
     }
-    pylon(-150, 'pylon'); pylon(6150, 'pylon');
-    swingLeaves(ctx, (pv, s) => {
-      const X = x => s * x;
-      bar(pv, [X(15), 120, 0], [X(2955), 120, 0], 'B80', 'frame');
-      bar(pv, [X(15), 2800, 0], [X(2955), 2800, 0], 'B80', 'frame', { turn: true });
-      bar(pv, [X(95), 1500, 0], [X(2875), 1500, 0], 'B80', 'frame', { turn: true });
-      bar(pv, [X(55), 160, 0], [X(55), 2785, 0], 'B80', 'frame');
-      bar(pv, [X(2915), 160, 0], [X(2915), 2785, 0], 'B80', 'frame');
-      pickets(ctx, pv, 95, 2875, 160, 2940, 'pickets', s);
-      bar(pv, [X(95), 160, -15], [X(2875), 2785, -15], 'L40', 'brace', { ls: [1, -1] });
-      [400, 2650].forEach(y => { cyl(pv, 25, 140, [0, y, 0], M.galv, 'hinge'); ctx.box(pv, [60, 60, 20], [X(-5), y, 0], M.galv, 'hinge'); });
-      if (s < 0) cyl(pv, 9, 1000, [X(2900), 400, -45], M.galv, 'drop');
-      else ctx.box(pv, [140, 200, 60], [X(2880), 1100, -50], M.dark, 'lock');
-    });
-    box(ctx.root, [120, 8, 120], [3000, 4, -60], M.galv, 'drop');
-    addDim(ctx.dims, [0, 20, 500], [6000, 20, 500], [0, 0, 0], 'Clear opening 6000');
-    addDim(ctx.dims, [6500, 0, 300], [6500, 3000, 300], [0, 0, 0], 'Height 3000', '#ffd34d', [500, 0, 0]);
-    addDim(ctx.dims, [50, 3000, 0], [2990, 3000, 0], [0, 400, 0], 'Leaf 2940');
-    addDim(ctx.dims, [3010, 3000, 0], [5950, 3000, 0], [0, 400, 0], 'Leaf 2940');
-    addDim(ctx.dims, [35, 20, -150], [35, 20, -2960], [0, 0, 0], 'Swing radius 2960 (keep clear)', '#7fe0ff');
-    ctx.label([-150, 3700, 0], 'Lattice pylon\n4×L40 + 30×30'); ctx.label([300, 400, -400], 'Heavy hinges'); ctx.label([1500, 1100, -400], 'L40 anti-sag strut');
-    ctx.label([4500, 2300, 300], '30×30 spear pickets'); ctx.label([3000, 600, -400], 'Drop bolt + stop');
-    road(ctx); fence(ctx, -14000, -300, 0); fence(ctx, 6300, 14000, 0);
   }
 
-  /* ================= D: swing premium ================= */
+  /* ================= D: swing budget – arched pickets ================= */
   function buildD(ctx) {
-    const { bar, box, cyl } = ctx;
-    [-250, 6250].forEach((cx, i) => {
-      box(ctx.root, [500, 3360, 500], [cx, 1680, 0], M.clad, 'pillar');
-      box(ctx.root, [470, 20, 470], [cx, 3370, 0], M.led, 'cap');
-      box(ctx.root, [540, 30, 540], [cx, 3395, 0], ctx.mats.paint, 'cap');
-      box(ctx.root, [1200, 6, 1200], [cx, 3, 0], M.concrete, 'found');
-      cyl(ctx.root, 45, 30, [cx, 18, 420], M.led, 'uplight');
-      ctx.count('S200', 4600, 'pillar');
+    latticePylon(ctx, -150, 'pylon', 'zig'); latticePylon(ctx, 6150, 'pylon', 'zig');
+    const top = lx => 2700 + 300 * Math.sin(Math.PI * (35 + lx) / 6000);
+    swingLeaves(ctx, (pv, s, X) => {
+      const { bar } = ctx;
+      swingFrame(ctx, pv, X, false);
+      [55, 2915].forEach(x => bar(pv, [X(x), 160, 0], [X(x), top(x) - 135, 0], 'B80', 'frame'));
+      [450, 1950, 2300].forEach(y => bar(pv, [X(95), y, 0], [X(2875), y, 0], 'B80', 'frame', { turn: true }));
+      const a = 95, b = 2875, n = Math.round((b - a) / 121), p = (b - a) / n, xs = [];
+      for (let i = 0; i < n; i++) { const x = a + p * (i + 0.5), y = top(x); xs.push(x); bar(pv, [X(x), 160, 0], [X(x), y - 60, 0], 'B30', 'pickets'); tip(ctx, pv, X(x), y, 'pickets'); }
+      [a - 20, ...xs, b + 20].forEach((x, i, arr) => { if (i) { const xm = (arr[i - 1] + x) / 2; bar(pv, [X(xm), 160, 0], [X(xm), 435, 0], 'B30', 'dog'); } });
+      const pts = []; for (let i = 0; i <= 10; i++) { const x = a - 40 + (b - a + 80) * i / 10; pts.push([x, top(x) - 150]); }
+      poly(ctx, pv, pts, 'B30', 'arch', { s });
+      const nd = 10, w = (b - a) / nd;
+      for (let i = 0; i < nd; i++) diamond(ctx, pv, a + w * (i + 0.5), 2125, w / 2, 160, 'band', { s, z: 30, mat: ctx.mats.accent });
+      bar(pv, [X(95), 160, -35], [X(2875), 2285, -35], 'L40', 'strut', { ls: [s, -1] });
     });
-    const signMat = new THREE.MeshStandardMaterial({ map: logoTex(ctx.opt.accent, true), emissive: 0xffffff, emissiveIntensity: 0.05, metalness: 0.3, roughness: 0.4 });
-    signMat.emissiveMap = signMat.map; ctx.mats.logo = signMat; ctx.mats.logoSquare = true;
-    box(ctx.root, [400, 400, 6], [-250, 2450, 253], signMat, 'sign');
-    box(ctx.root, [140, 240, 40], [6250, 1350, 270], M.dark, 'intercom');
-    box(ctx.root, [90, 60, 6], [6250, 1420, 291], M.glass, 'intercom');
-    // barcode pattern (left leaf, mirrored for right)
-    const R = rng(20261115), bars = []; let x = 95;
-    let wide = true;
-    while (true) {
-      const gap = 45 + Math.round(R() * 50);
-      const w = wide ? 80 : 30;
-      if (x + gap + w + 45 > 2875) break;
-      x += gap; bars.push([x + w / 2, w]); x += w;
-      wide = R() < 0.45 ? wide : !wide;
+    ctx.label([-150, 3800, 0], 'Lattice pylon\n4×L40 + 30×30'); ctx.label([3000, 3350, 200], 'Arched picket tops');
+    ctx.label([1500, 2125, 400], 'Accent diamond band'); ctx.label([4500, 300, 400], 'Dog bars'); ctx.label([1500, 1100, -400], 'L40 anti-sag strut');
+  }
+
+  /* ================= E: swing modern – skyline ================= */
+  function twinPylon(ctx, side) {
+    const sx = side, ci = side > 0 ? -60 : 6060, co = ci - sx * 270;
+    pinwheel(ctx, ctx.root, ci, 0, 3150, 'pylon'); pinwheel(ctx, ctx.root, co, 0, 3150, 'pylon');
+    for (let y = 200; y <= 3000; y += 350) [-40, 40].forEach(z => ctx.bar(ctx.root, [co + sx * 55, y, z], [ci - sx * 55, y, z], 'B30', 'pylon'));
+    ctx.box(ctx.root, [1000, 6, 800], [(ci + co) / 2, 3, 0], M.concrete, 'found');
+  }
+  function buildE(ctx) {
+    twinPylon(ctx, 1); twinPylon(ctx, -1);
+    const h = g => Math.max(2900 - 1.3 * Math.abs(g - 3000), 2250 - 1.2 * Math.abs(g - 1100), 2250 - 1.2 * Math.abs(g - 4900), 600);
+    const a = 95, b = 2875, nb = Math.round((b - a) / 110), pb = (b - a) / nb, bx = [];
+    for (let i = 0; i < nb; i++) bx.push(a + pb * (i + 0.5));
+    const snap = lx => bx.reduce((m, x) => Math.abs(x - lx) < Math.abs(m - lx) ? x : m, bx[0]);
+    const rows = [];
+    for (let y = 330; y <= 2730; y += 160) {
+      let run = null;
+      for (let lx = 15; lx <= 2955; lx += 5) {
+        const on = h(35 + lx) >= y + 40;
+        if (on && run === null) run = lx;
+        if ((!on || lx + 5 > 2955) && run !== null) {
+          const e = on ? 2955 : lx - 5, x0 = run <= 20 ? 15 : snap(run), x1 = e >= 2950 ? 2955 : snap(e);
+          if (x1 - x0 > 150) rows.push([y, x0, x1]);
+          run = null;
+        }
+      }
     }
-    const shift = (2875 - x) / 2; bars.forEach(b => b[0] += shift);
-    swingLeaves(ctx, (pv, s) => {
-      const X = x => s * x;
-      bar(pv, [X(15), 120, 0], [X(2955), 120, 0], 'B80', 'frame');
-      bar(pv, [X(15), 2960, 0], [X(2955), 2960, 0], 'B80', 'frame');
-      bar(pv, [X(55), 160, 0], [X(55), 2920, 0], 'B80', 'frame');
-      bar(pv, [X(2915), 160, 0], [X(2915), 2920, 0], 'B80', 'frame');
-      bars.forEach(([bx, w]) => w === 80 ? bar(pv, [X(bx), 160, 0], [X(bx), 2920, 0], 'B80', 'bar80') : bar(pv, [X(bx), 160, 0], [X(bx), 2920, 0], 'B30', 'bar30', { mat: ctx.mats.accent }));
-      bar(pv, [X(95), 1500, -30], [X(2875), 1500, -30], 'B80', 'hidden');
-      bar(pv, [X(95), 160, -45], [X(2875), 2920, -45], 'L40', 'hidden', { ls: [1, -1] });
-      [450, 2600].forEach(y => { cyl(pv, 28, 150, [0, y, 0], M.galv, 'hinge'); ctx.box(pv, [60, 60, 24], [X(-5), y, 0], M.galv, 'hinge'); });
+    swingLeaves(ctx, (pv, s, X) => {
+      swingFrame(ctx, pv, X);
+      bx.forEach(x => ctx.bar(pv, [X(x), 160, 0], [X(x), 2920, 0], 'B30', 'bars'));
+      rows.forEach(([y, x0, x1]) => ctx.bar(pv, [X(x0), y, 30], [X(x1), y, 30], 'B80', 'sky', { mat: ctx.mats.accent }));
+      ctx.bar(pv, [X(95), 160, -35], [X(2875), 2920, -35], 'L40', 'strut', { ls: [s, -1] });
     });
-    [[260, -230], [5740, -230]].forEach(([x, z]) => box(ctx.root, [520, 10, 360], [x, 5, z], M.galv, 'motor'));
-    addDim(ctx.dims, [0, 20, 650], [6000, 20, 650], [0, 0, 0], 'Clear opening 6000');
-    addDim(ctx.dims, [6650, 0, 350], [6650, 3000, 350], [0, 0, 0], 'Leaf top 3000', '#ffd34d', [550, 0, 0]);
-    addDim(ctx.dims, [-500, 3420, 260], [0, 3420, 260], [0, 350, 0], 'Pillar 500×500 · h 3400');
-    addDim(ctx.dims, [35, 20, -150], [35, 20, -2960], [0, 0, 0], 'Swing radius 2960 (keep clear)', '#7fe0ff');
-    ctx.label([-250, 4500, 0], 'Clad pillar + LED cap'); ctx.label([1500, 2300, 300], '80×30 + 30×30 “barcode”'); ctx.label([5740, 400, -700], 'Underground motor');
-    ctx.label([-250, 2950, 500], 'Logo plate'); ctx.label([6250, 1800, 500], 'Intercom');
-    road(ctx); fence(ctx, -14000, -500, 0); fence(ctx, 6500, 14000, 0);
+    ctx.label([-195, 3700, 0], 'Twin pinwheel pylon\n2 × (4 × 80×30)'); ctx.label([3000, 3250, 300], 'Skyline: 80×30 accent slats');
+    ctx.label([4800, 1000, 300], '30×30 background bars'); ctx.label([1500, 1100, -400], 'L40 anti-sag strut');
+  }
+
+  /* ================= F: swing decorative – sunrise ================= */
+  function buildF(ctx) {
+    latticePylon(ctx, -150, 'pylon', 'x'); latticePylon(ctx, 6150, 'pylon', 'x');
+    const C = [2965, 160], rect = [95, 160, 2875, 2920], pol = (r, d) => [C[0] + r * Math.cos(d * Math.PI / 180), C[1] + r * Math.sin(d * Math.PI / 180)];
+    swingLeaves(ctx, (pv, s, X) => {
+      swingFrame(ctx, pv, X);
+      const acc = { s, rect, mat: ctx.mats.accent, min: 40 };
+      poly(ctx, pv, arc(C[0], C[1], 450, 90, 180, 6), 'B80', 'hub', acc);
+      [320, 190].forEach(r => poly(ctx, pv, arc(C[0], C[1], r, 90, 180, 6), 'B30', 'hub', acc));
+      [1400, 2300, 3200].forEach(r => poly(ctx, pv, arc(C[0], C[1], r, 90, 180, 24), 'B30', 'rings', acc));
+      const ray = (d, r0) => seg(ctx, pv, pol(r0, d), pol(6000, d), 'B30', 'rays', { s, rect, min: 60 });
+      for (let i = 1; i <= 11; i++) ray(90 + 7.5 * i, 490);
+      for (let i = 0; i < 12; i++) ray(93.75 + 7.5 * i, 1415);
+      for (let i = 0; i < 24; i++) { const d = 91.875 + 3.75 * i; if (d <= 168) ray(d, 2315); }
+      ctx.bar(pv, [X(95), 160, -35], [X(2875), 2920, -35], 'L40', 'strut', { ls: [s, -1] });
+    });
+    ctx.label([-150, 3800, 0], 'Lattice pylon, X lacing'); ctx.label([3000, 900, 400], 'Sun hub 80×30');
+    ctx.label([1700, 2500, 300], '30×30 rays'); ctx.label([4300, 1800, 300], 'Accent rings');
   }
 
   /* ---------- build all ---------- */
-  const BUILD = { A: buildA, B: buildB, C: buildC, D: buildD };
+  const BUILD = { A: buildA, B: buildB, C: buildC, D: buildD, E: buildE, F: buildF };
   const CTX = {};
-  const OFFS = { A: [0, 0, 0], B: [21000, 0, 0], C: [0, 0, 20000], D: [17000, 0, 20000] };
+  const OFFS = { A: [0, 0, 0], B: [21000, 0, 0], C: [42000, 0, 0], D: [0, 0, 20000], E: [21000, 0, 20000], F: [42000, 0, 20000] };
+  const TAGC = { eco: '#5fd38a', pro: '#c08cff', deco: '#ffb347' };
   OPTIONS.forEach(o => {
     const ctx = makeCtx(o); BUILD[o.id](ctx); CTX[o.id] = ctx; scene.add(ctx.root);
     ctx.meshes.forEach(m => m.userData.mat0 = m.material);
-    const tag = textSprite(`${o.id} · ${o.kind === 'slide' ? 'Sliding' : 'Swing'} · ${o.budget === 'eco' ? 'Budget' : 'Premium'}`, { color: '#fff', border: o.budget === 'eco' ? '#5fd38a' : '#c08cff', h: 0.022, bold: 800 });
+    const tag = textSprite(`${o.id} · ${o.kind === 'slide' ? 'Sliding' : 'Swing'} · ${BADGE[o.budget][1]}`, { color: '#fff', border: TAGC[o.budget], h: 0.022, bold: 800 });
     tag.position.set(o.center[0], 4700, 0); ctx.root.add(tag); ctx.tagSprite = tag;
   });
 
@@ -608,17 +703,17 @@ function init() {
   OPTIONS.forEach(o => {
     const d = document.createElement('div'); d.className = 'card'; d.dataset.opt = o.id;
     d.innerHTML = `<span class="code">${o.id}</span><span class="k">${o.kind === 'slide' ? '⇄ Sliding' : '⟲ Swing (2 leaves)'}</span>
-      <div class="t">${o.short}</div><span class="badge ${o.budget}">${o.budget === 'eco' ? '💰 Budget' : '✨ Premium'}</span>`;
+      <div class="t">${o.short}</div><span class="badge ${o.budget}">${BADGE[o.budget][0]}</span>`;
     d.onclick = () => selectOpt(o.id, true);
     cards.appendChild(d);
   });
   function renderDetail() {
     const o = OPT[state.opt], ctx = CTX[o.id], { by, leafKg } = bom(ctx);
-    let stockKg = 0, buyKg = 0;
+    let stockKg = 0;
     const rows = Object.entries(by).map(([sec, b]) => {
-      const S = SEC[sec], kg = S.kg * b.len / 1000; if (S.stock) stockKg += kg; else buyKg += kg;
-      const bars = S.stock ? Math.ceil(b.len * 1.1 / 6000) : '–';
-      return `<tr><td>${S.stock ? '🟢' : '🛒'} ${S.label}</td><td class="n">${b.n}</td><td class="n">${(b.len / 1000).toFixed(1)} m</td><td class="n">${bars}</td><td class="n">${Math.round(kg)} kg</td></tr>`;
+      const S = SEC[sec], kg = S.kg * b.len / 1000; stockKg += kg;
+      const bars = Math.ceil(b.len * 1.1 / 6000);
+      return `<tr><td>🟢 ${S.label}</td><td class="n">${b.n}</td><td class="n">${(b.len / 1000).toFixed(1)} m</td><td class="n">${bars}</td><td class="n">${Math.round(kg)} kg</td></tr>`;
     }).join('');
     const li = a => a.map(x => `<li>${x}</li>`).join('');
     document.getElementById('detail').innerHTML = `
@@ -628,16 +723,16 @@ function init() {
         <div>${o.kind === 'slide' ? 'Leaf weight' : 'Weight per leaf'}<b>≈ ${Math.round(leafKg)} kg</b></div>
         <div>Steel from your stock<b>≈ ${Math.round(stockKg)} kg</b></div>
         <div>Movement<b>${o.kind === 'slide' ? 'Slides left ' + (o.travel / 1000).toFixed(2) + ' m' : '2 × 90° inwards'}</b></div>
-        <div>Budget<b>${o.budget === 'eco' ? '💰 Low' : '✨ High'}</b></div>
+        <div>Style<b>${BADGE[o.budget][0]}</b></div>
+        <div>Pieces to cut<b>${ctx.members.length}</b></div>
       </div>
       <h3>How it works</h3><p>${o.how}</p>
       <h3>Structure</h3><ul>${li(o.structure)}</ul>
-      <h3>Steel list (whole gate incl. posts)</h3>
+      <h3>Steel list – all from your stock (whole gate incl. posts)</h3>
       <table class="bom"><tr><th>Section</th><th class="n">pcs</th><th class="n">total</th><th class="n">6 m bars*</th><th class="n">weight</th></tr>${rows}
-      <tr class="tot"><td>From your stock</td><td></td><td></td><td></td><td class="n">${Math.round(stockKg)} kg</td></tr>
-      ${buyKg ? `<tr class="tot"><td>Steel to buy</td><td></td><td></td><td></td><td class="n">${Math.round(buyKg)} kg</td></tr>` : ''}</table>
-      <p class="hint">* incl. ~10 % offcuts. 🟢 = your stock, 🛒 = buy. The exact cut list comes with the contractor pack.</p>
-      <h3>To buy</h3><ul>${li(o.buy)}</ul>
+      <tr class="tot"><td>Total, from your stock</td><td></td><td></td><td></td><td class="n">${Math.round(stockKg)} kg</td></tr></table>
+      <p class="hint">* 6 m bars incl. ~10 % offcuts. Wall thickness assumed 2 mm. The exact cut list comes with the contractor pack.</p>
+      <h3>Hardware to buy (no steel)</h3><ul>${li(o.buy)}</ul>
       <h3>Space needed</h3><p>${o.space}</p>
       <h3>✅ Pros</h3><ul>${li(o.pros)}</ul>
       <h3>⚠️ Cons</h3><ul>${li(o.cons)}</ul>`;
@@ -653,7 +748,6 @@ function init() {
         b.classList.toggle('on', '#' + mat.color.getHexString() === new THREE.Color(hex).getHexString());
         b.onclick = () => {
           mat.color.set(hex); o[key] = hex;
-          if (key === 'accent' && ctx.mats.logo) { ctx.mats.logo.map.dispose(); ctx.mats.logo.map = ctx.mats.logo.emissiveMap = logoTex(hex, !!ctx.mats.logoSquare); ctx.mats.logo.needsUpdate = true; }
           renderSwatches();
         };
         el.appendChild(b);
@@ -682,7 +776,7 @@ function init() {
   /* ---------- layout, views, toggles ---------- */
   let fly = null;
   function presets() {
-    if (state.all) return { iso: { p: [11500, 21000, 45000], t: [11000, 0, 9500] }, front: { p: [11000, 9000, 52000], t: [11000, 1500, 9500] }, inside: { p: [11000, 20000, -26000], t: [11000, 0, 9500] }, top: { p: [11000, 62000, 9510], t: [11000, 0, 9500] }, detail: { p: [11500, 21000, 45000], t: [11000, 0, 9500] } };
+    if (state.all) return { iso: { p: [26000, 28000, 62000], t: [22000, 0, 10000] }, front: { p: [22000, 11000, 70000], t: [22000, 1500, 10000] }, inside: { p: [22000, 26000, -45000], t: [22000, 0, 10000] }, top: { p: [22000, 80000, 10010], t: [22000, 0, 10000] }, detail: { p: [26000, 28000, 62000], t: [22000, 0, 10000] } };
     const o = OPT[state.opt], [cx, cy] = o.center, s = o.span;
     return {
       iso: { p: [cx + 0.62 * s, 0.26 * s, 0.78 * s], t: [cx, cy, 0] },
@@ -707,7 +801,7 @@ function init() {
       ctx.tagSprite.visible = state.all;
     });
     scaleGrp.visible = state.truck && !state.all;
-    if (state.all) setShadowBox(11000, 10000, 26000); else setShadowBox(OPT[state.opt].center[0], 1500, 13000);
+    if (state.all) setShadowBox(22000, 10000, 36000); else setShadowBox(OPT[state.opt].center[0], 1500, 13000);
     document.querySelectorAll('[data-toggle]').forEach(b => b.classList.toggle('on', !!state[b.dataset.toggle]));
   }
   function selectOpt(id, fly2) {
@@ -720,8 +814,6 @@ function init() {
     const n = state.night;
     scene.background.copy(n ? NIGHT : DAY); scene.fog.color.copy(n ? NIGHT : DAY);
     hemi.intensity = n ? 0.12 : 0.75; sun.intensity = n ? 0.05 : 0.9; fill.intensity = n ? 0.06 : 0.25;
-    M.led.emissiveIntensity = n ? 3 : 0.5;
-    Object.values(CTX).forEach(c => { if (c.mats.logo) c.mats.logo.emissiveIntensity = n ? 0.9 : 0.05; });
   }
   document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => flyTo(b.dataset.view));
   document.querySelectorAll('[data-toggle]').forEach(b => b.onclick = () => {
