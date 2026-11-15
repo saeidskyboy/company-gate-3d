@@ -121,6 +121,7 @@
       <button data-toggle="labels">برچسب‌ها</button>
       <button data-toggle="env">حصار و جاده</button>
       <button data-toggle="truck">کامیون و آدم</button>
+      <button data-toggle="sign">تابلو خوش‌آمد</button>
       <button data-toggle="night">شب</button>
       <button data-toggle="spin">چرخش خودکار</button>
     </div>
@@ -132,7 +133,7 @@
   <div id="detail"></div>
 
   <h2>موجودی شما (برداشت من)</h2>
-  <p><b>تمام اعضای فلزی هر 6 طرح فقط از همین سه مقطع ساخته می‌شوند</b> – لنگه‌ها، ستون‌ها، ستون‌های اصلی، ریل و شمشیری‌ها. فقط یراق‌آلات (چرخ، غلتک، لولا، قفل)، بتن و رنگ خریداری می‌شود.</p>
+  <p><b>تمام اعضای فلزی هر 6 طرح فقط از همین سه مقطع ساخته می‌شوند</b> – لنگه‌ها، ستون‌ها، ستون‌های اصلی، ریل، شمشیری‌ها و اسکلت تابلو سردر. فقط یراق‌آلات (چرخ، غلتک، لولا، قفل)، روکش و حروف و نور تابلو، بتن و رنگ خریداری می‌شود.</p>
   <ul>
     <li><b>«نبشی نمره 4»</b> ← نبشی بال‌مساوی <b>L40×40×4</b> (≈ 2.4 kg/m)</li>
     <li><b>«قوطی 8×3»</b> ← قوطی مستطیلی <b>80×30</b>، ضخامت حدود 2 mm (≈ 3.3 kg/m)</li>
@@ -309,6 +310,23 @@ const OPTIONS = [
     }, SWING_PARTS)
   }
 ];
+/* ---------- overhead welcome sign (shared by all 6 gates) ---------- */
+const SIGN_TEXT = 'به نخل زرین خوش آمدید', SIGN_BACK = 'به امید دیدار';
+const SIGN_PARTS = {
+  signPylon: P('پایه‌های تابلو (ستون‌های مونولیت)', 'اسکلت از موجودی شما: 4 × قوطی 80×30 در گوشه‌های 600×400 + بست افقی و ضربدری 30×30 · روکش خریدنی: کامپوزیت مشکی براق', 'دو ستون مستطیلی 700×500 به ارتفاع 7.1 m. داخل هر ستون یک خرپای چهارپایه از قوطی 80×30 است که 1200 mm داخل بتن ریخته می‌شود (پایه‌ها چون از 6 m بلندترند با جوش نفوذی کامل + غلاف داخلی 30×30 وصله می‌شوند). روی آن ورق کامپوزیت (ACP) مشکی پرچ می‌شود.'),
+  signTruss: P('خرپای سردر', 'از موجودی شما: 4 × قوطی 80×30 (بال بالا و پایین، جلو و عقب) + عمودی و مورب 30×30', 'یک تیر جعبه‌ای خرپایی به طول 7.5 m، ارتفاع 1.6 m و عمق 400 mm که بین دو ستون جوش می‌شود. تابلو کاملاً روی آن سوار است و داخل روکش پنهان می‌شود.'),
+  signFace: P('بدنه تابلو (کامپوزیت مشکی + قاب طلایی)', 'زیرسازی 30×30 از موجودی شما · خریدنی: ورق کامپوزیت 4 mm مشکی براق، قاب و نوار استیل طلایی آینه‌ای', 'جلو و پشت تابلو یکپارچه مشکی است، با قاب دوبل طلایی و خطوط تزئینی. ابعاد نمای تابلو 7500 × 1600 mm و ارتفاع زیر تابلو 5.2 m است تا کامیون‌های بلند (حدود 4 m) با فاصله امن عبور کنند.'),
+  signLetters: P('حروف برجسته «به نخل زرین خوش آمدید»', 'خریدنی: حروف چلنیوم/استیل طلایی آینه‌ای به عمق 30–50 mm با نور پشت حرف (هاله‌ای)', 'حروف با فاصله 25 mm از بدنه نصب می‌شوند؛ LED سفید گرم پشت حروف در شب یک هاله طلایی روی زمینه مشکی می‌سازد. پشت تابلو (سمت داخل کارخانه) نوشته «به امید دیدار» دارد.'),
+  signCrest: P('تاج و نشان نخل طلایی', 'زیرسازی قوس‌دار 30×30 از موجودی شما · خریدنی: روکش کامپوزیت، نشان نخل برش لیزری استیل طلایی', 'نیم‌دایره‌ای به شعاع 700 mm در وسط بالای تابلو با نشان نخل طلایی؛ نماد «نخل زرین» و نقطه اوج ترکیب.'),
+  signLed: P('نورپردازی LED', 'خریدنی: نوار LED سفید گرم 3000K، IP67، 7 چراغ سقفی زیر تابلو، ترانس ضدآب + فتوسل/تایمر', 'نوار طلایی عمودی روی هر ستون، نور زیر تابلو که مسیر ورودی را روشن می‌کند و نور پشت حروف. برای دیدن اثر آن دکمه «شب» را بزنید.'),
+  signFound: P('فونداسیون تابلو', 'بتن C25/30 مسلح + سنگ گرانیت مشکی دور پای ستون (خریدنی)', 'برای هر ستون حدود 1.6 × 1.2 m با عمق 1.5 m. سطح بادگیر تابلو حدود 12 m² در ارتفاع 7 m است، پس ابعاد فونداسیون، جوش‌ها و ضخامت پروفیل‌ها باید توسط مهندس سازه کنترل شود.')
+};
+const SIGN = {
+  how: 'یک سردر ورودی مستقل و لوکس که 1.4 m داخل‌تر از خط درب، روی دو ستون مونولیت مشکی ایستاده است. چون ستون‌ها بیرون از دهانه و مسیر حرکت لنگه هستند، برای هر 6 طرح (ریلی یا لولایی) یکسان است و به درب هیچ باری وارد نمی‌کند. اسکلت کامل آن از قوطی 80×30 و 30×30 موجودی شماست؛ فقط روکش، حروف و نور خریدنی است.',
+  buy: ['ورق کامپوزیت (ACP) 4 mm مشکی براق، حدود 60 m² (ستون‌ها، تابلو جلو و پشت، تاج)', 'حروف برجسته استیل طلایی آینه‌ای «به نخل زرین خوش آمدید» + «به امید دیدار»، با LED پشت حرف', 'نشان نخل طلایی برش لیزری، Ø حدود 650 mm', 'نوار و قاب استیل طلایی آینه‌ای (PVD) برای خطوط تزئینی', 'نوار LED سفید گرم IP67 + 7 چراغ سقفی + ترانس ضدآب + فتوسل/تایمر', 'سنگ گرانیت مشکی برای پای ستون‌ها، بتن مسلح فونداسیون، پرچ و چسب نما'],
+  clear: 5200
+};
+OPTIONS.forEach(o => Object.assign(o.parts, SIGN_PARTS));
 const OPT = Object.fromEntries(OPTIONS.map(o => [o.id, o]));
 
 function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -318,7 +336,7 @@ function roundRect(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcT
 function init() {
   const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
   const view = document.getElementById('view');
-  const state = { opt: 'A', all: false, dims: true, labels: false, env: true, truck: true, night: false, spin: false, open: 0, target: 0 };
+  const state = { opt: 'A', all: false, dims: true, labels: false, env: true, truck: true, night: false, spin: false, sign: true, open: 0, target: 0 };
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -810,16 +828,186 @@ function init() {
     ctx.label([1700, 2500, 300], 'پرتوهای 30×30'); ctx.label([4300, 1800, 300], 'حلقه‌های تأکیدی');
   }
 
+  /* ---------- overhead welcome sign (stock-steel skeleton, bought ACP/gold/LED finish) ---------- */
+  const SZ = -1400, SXL = -1100, SXR = 7100, SY0 = SIGN.clear, SY1 = SY0 + 1600, PTOP = 7100, SW = 7500, SH = 1600;
+  const GOLD = ['#fff4c8', '#f3d47c', '#c8952d', '#86591a', '#dcb04f', '#fff0b6', '#b9852a'];
+  const goldGrad = (g, x0, y0, x1, y1) => { const gr = g.createLinearGradient(x0, y0, x1, y1); GOLD.forEach((c, i) => gr.addColorStop(i / (GOLD.length - 1), c)); return gr; };
+  const signFont = (g, text, maxW, size) => { let s = size; for (; s > 40; s -= 6) { g.font = `800 ${s}px Vazirmatn, Tahoma, sans-serif`; if (g.measureText(text).width <= maxW) break; } return s; };
+  const TW = 3750, TH = 800;
+  function textLayout(text) {
+    const c = document.createElement('canvas').getContext('2d');
+    const s = signFont(c, text, text === SIGN_TEXT ? 2600 : 1800, 380);
+    return { s, w: c.measureText(text).width };
+  }
+  function faceTex(text) {
+    const { w: tw } = textLayout(text);
+    return canvasTex(TW, TH, (g, w, h) => {
+      const bg = g.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, '#1d1e22'); bg.addColorStop(0.5, '#0a0a0b'); bg.addColorStop(1, '#16171a');
+      g.fillStyle = bg; g.fillRect(0, 0, w, h);
+      const r = rng(11); g.globalAlpha = 0.05; g.strokeStyle = '#ffffff';
+      for (let i = 0; i < 500; i++) { const y = r() * h; g.lineWidth = r() * 1.5; g.beginPath(); g.moveTo(r() * w, y); g.lineTo(r() * w, y); g.stroke(); }
+      g.globalAlpha = 1;
+      const gold = goldGrad(g, 0, 0, w * 0.3, h);
+      g.strokeStyle = gold; g.lineWidth = 12; g.strokeRect(34, 34, w - 68, h - 68);
+      g.lineWidth = 3; g.strokeRect(62, 62, w - 124, h - 124);
+      g.fillStyle = gold;
+      const dia = (x, y, s) => { g.beginPath(); g.moveTo(x - s, y); g.lineTo(x, y - s * 0.62); g.lineTo(x + s, y); g.lineTo(x, y + s * 0.62); g.closePath(); g.fill(); };
+      [[62, 62], [w - 62, 62], [62, h - 62], [w - 62, h - 62]].forEach(([x, y]) => dia(x, y, 22));
+      // flanking gold rules that end in diamonds, kept clear of the letters
+      const cy = h / 2 + 10, gap = tw / 2 + 120, x0 = 190;
+      [-1, 1].forEach(sd => {
+        const a = w / 2 + sd * gap, b = sd < 0 ? x0 : w - x0;
+        g.fillRect(Math.min(a, b), cy - 3, Math.abs(b - a), 6);
+        g.fillRect(Math.min(a, b) + 60, cy - 22, Math.abs(b - a) - 120, 2);
+        g.fillRect(Math.min(a, b) + 60, cy + 20, Math.abs(b - a) - 120, 2);
+        dia(a, cy, 30); dia(b, cy, 22); dia((a + b) / 2, cy, 40);
+      });
+    });
+  }
+  function letterTex(text, glow) {
+    const { s } = textLayout(text);
+    return canvasTex(TW, TH, (g, w, h) => {
+      g.clearRect(0, 0, w, h);
+      g.direction = 'rtl'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = `800 ${s}px Vazirmatn, Tahoma, sans-serif`;
+      const x = w / 2, y = h / 2 + 10;
+      if (glow) {
+        g.shadowColor = 'rgba(255,196,110,1)'; g.fillStyle = 'rgba(255,214,150,0.85)';
+        [90, 60, 30].forEach(b => { g.shadowBlur = b; g.fillText(text, x, y); });
+        return;
+      }
+      g.fillStyle = '#2b1d05'; g.fillText(text, x + 7, y + 9);
+      g.fillStyle = goldGrad(g, 0, y - s * 0.55, 0, y + s * 0.55); g.fillText(text, x, y);
+      g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,255,255,0.18)'; g.fillRect(0, 0, w, y - s * 0.12);
+    });
+  }
+  function palmTex() {
+    return canvasTex(1024, 1024, (g, w) => {
+      g.clearRect(0, 0, w, w);
+      g.save(); g.translate(w / 2, w * 0.95); const sc = w / 1050; g.scale(sc, sc);
+      const gold = goldGrad(g, -500, -900, 500, 0), q = (a, b, c, t) => (1 - t) * (1 - t) * a + 2 * (1 - t) * t * b + t * t * c;
+      g.fillStyle = gold; g.strokeStyle = gold;
+      g.beginPath(); g.ellipse(0, 0, 300, 34, 0, Math.PI, 0); g.fill();
+      g.beginPath(); g.moveTo(-46, 0); g.quadraticCurveTo(-14, -320, 14, -560); g.lineTo(44, -560); g.quadraticCurveTo(34, -320, 46, 0); g.closePath(); g.fill();
+      g.strokeStyle = 'rgba(70,45,5,0.6)'; g.lineWidth = 7;
+      for (let i = 1; i < 13; i++) {
+        const t = i / 13, y = q(0, -320, -560, t), xl = q(-46, -14, 14, t), xr = q(46, 34, 44, t);
+        g.beginPath(); g.moveTo(xl, y + 6); g.quadraticCurveTo((xl + xr) / 2, y - 10, xr, y + 6); g.stroke();
+      }
+      const C = [29, -575];
+      const fronds = [[205, 330], [172, 400], [140, 360], [110, 300], [76, 320], [44, 390], [10, 380], [-22, 300], [232, 250], [92, 230]];
+      fronds.forEach(([deg, L]) => {
+        const a = deg * Math.PI / 180, dx = Math.cos(a), dy = -Math.sin(a), droop = L * 0.42 * Math.abs(dx);
+        const T = [C[0] + L * dx, C[1] + L * dy + droop], K = [C[0] + 0.55 * L * dx, C[1] + 0.55 * L * dy - 0.12 * L];
+        const pt = t => [q(C[0], K[0], T[0], t), q(C[1], K[1], T[1], t)];
+        g.strokeStyle = gold; g.lineCap = 'round';
+        g.lineWidth = 11; g.beginPath(); g.moveTo(...C); g.quadraticCurveTo(...K, ...T); g.stroke();
+        for (let t = 0.1; t < 0.97; t += 0.045) {
+          const [px, py] = pt(t), [nx, ny] = pt(Math.min(1, t + 0.02)), tx = nx - px, ty = ny - py, tl = Math.hypot(tx, ty) || 1;
+          const ux = tx / tl, uy = ty / tl, len = L * 0.26 * Math.sin(Math.PI * Math.min(1, t * 1.15)) + 12;
+          g.lineWidth = 9 * (1 - t * 0.6);
+          [-1, 1].forEach(sd => {
+            const ox = -uy * sd, oy = ux * sd;
+            g.beginPath(); g.moveTo(px, py); g.lineTo(px + (ox * 0.8 + ux * 0.6) * len, py + (oy * 0.8 + uy * 0.6) * len + len * 0.18); g.stroke();
+          });
+        }
+      });
+      g.fillStyle = gold; [[-6, -540], [30, -528], [62, -545], [12, -500], [46, -498]].forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 19, 0, Math.PI * 2); g.fill(); });
+      g.restore();
+    });
+  }
+  const SIGN_TEX = { face: faceTex(SIGN_TEXT), back: faceTex(SIGN_BACK), front: letterTex(SIGN_TEXT), frontGlow: letterTex(SIGN_TEXT, true), rear: letterTex(SIGN_BACK), rearGlow: letterTex(SIGN_BACK, true), palm: palmTex() };
+  const lit = (map, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ map, transparent: true, alphaTest: 0.04, emissive: 0xffffff, emissiveMap: map, emissiveIntensity: 0.12, metalness: 0.35, roughness: 0.3, depthWrite: false }, o));
+  const glowMat = map => new THREE.MeshBasicMaterial({ map, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0 });
+  const SM = {
+    acp: MSM(0x0d0e10, { metalness: 0.55, roughness: 0.26 }),
+    gold: MSM(0xd9aa45, { metalness: 0.55, roughness: 0.28, emissive: 0x2e1d02 }),
+    granite: MSM(0x1b1c1f, { metalness: 0.15, roughness: 0.32 }),
+    led: new THREE.MeshStandardMaterial({ color: 0xfff1d2, emissive: 0xffc56e, emissiveIntensity: 0.35 }),
+    face: MSM(0xffffff, { map: SIGN_TEX.face, metalness: 0.3, roughness: 0.32 }),
+    back: MSM(0xffffff, { map: SIGN_TEX.back, metalness: 0.3, roughness: 0.32 }),
+    front: lit(SIGN_TEX.front), rear: lit(SIGN_TEX.rear), palm: lit(SIGN_TEX.palm, { emissiveIntensity: 0.18 }),
+    frontGlow: glowMat(SIGN_TEX.frontGlow), rearGlow: glowMat(SIGN_TEX.rearGlow)
+  };
+  const SIGN_LIGHTS = [];
+  const semi = (ro, ri) => { const s = new THREE.Shape(); s.absarc(0, 0, ro, 0, Math.PI, false); if (ri) s.absarc(0, 0, ri, Math.PI, 0, true); s.closePath(); return s; };
+  const crestGeo = new THREE.ExtrudeGeometry(semi(700), { depth: 400, bevelEnabled: false, curveSegments: 40 }); crestGeo.translate(0, 0, -200);
+  const rimGeo = new THREE.ExtrudeGeometry(semi(740, 690), { depth: 440, bevelEnabled: false, curveSegments: 40 }); rimGeo.translate(0, 0, -220);
+
+  function welcomeSign(ctx) {
+    const G = new THREE.Group(); ctx.root.add(G); ctx.sign = G;
+    const keep = ctx.members; ctx.members = ctx.signMembers = [];
+    const add = (geo, mat, pos, part, o = {}) => {
+      const m = new THREE.Mesh(geo, mat); m.position.set(...pos); if (o.ry) m.rotation.y = o.ry; G.add(m);
+      if (part) { ctx.tag(m, part); m.userData.sign = true; }
+      if (o.flat) m.castShadow = m.receiveShadow = false;
+      return m;
+    };
+    const bx = (s, p, mat, part, o) => add(boxGeo(...s), mat, p, part, o);
+    const plane = (w, h, mat, p, part, ry) => add(new THREE.PlaneGeometry(w, h), mat, p, part, { ry, flat: true });
+
+    // pylons: 4 × 80×30 legs (600×400) + 30×30 battens/lacing inside a black ACP monolith
+    [SXL, SXR].forEach(xc => {
+      ctx.count('B80', PTOP - 50 + 1200, 'signPylon', 4); ctx.count('B80', 600, 'signPylon', 2);
+      ctx.count('B30', 540, 'signPylon', 24); ctx.count('B30', 340, 'signPylon', 24);
+      ctx.count('B30', 785, 'signPylon', 22); ctx.count('B30', 664, 'signPylon', 22);
+      bx([1600, 6, 1200], [xc, 3, SZ], M.concrete, 'signFound', { flat: true });
+      bx([900, 300, 700], [xc, 150, SZ], SM.granite, 'signFound');
+      bx([700, PTOP - 300, 500], [xc, 300 + (PTOP - 300) / 2, SZ], SM.acp, 'signPylon');
+      bx([760, 60, 560], [xc, PTOP + 30, SZ], SM.gold, 'signPylon');
+      [900, 960, SY0 - 260].forEach(y => bx([712, 18, 512], [xc, y, SZ], SM.gold, 'signPylon'));
+      [1, -1].forEach(sd => {
+        bx([100, PTOP - 1500, 10], [xc, 1100 + (PTOP - 1500) / 2, SZ + sd * 255], SM.gold, 'signPylon');
+        bx([34, PTOP - 1560, 14], [xc, 1100 + (PTOP - 1500) / 2, SZ + sd * 260], SM.led, 'signLed', { flat: true });
+      });
+    });
+
+    // box truss carrying the sign (hidden inside the cabinet)
+    const L = SXR - SXL - 600, n = 11;
+    ctx.count('B80', L, 'signTruss', 4); ctx.count('B30', SH - 160, 'signTruss', (n + 1) * 2);
+    ctx.count('B30', Math.round(Math.hypot(L / n, SH - 160)), 'signTruss', n * 2); ctx.count('B30', 300, 'signTruss', (n + 1) * 2);
+    // cabinet: 30×30 sub-frame front + back, black ACP, double gold bezel
+    ctx.count('B30', SW, 'signFace', 4); ctx.count('B30', SH, 'signFace', 14);
+    const cx = (SXL + SXR) / 2, cy = (SY0 + SY1) / 2;
+    bx([SW, SH, 400], [cx, cy, SZ], SM.acp, 'signFace');
+    bx([SW + 40, 30, 440], [cx, SY1 + 15, SZ], SM.gold, 'signFace');
+    bx([SW + 40, 24, 440], [cx, SY0 - 12, SZ], SM.gold, 'signFace');
+    [1, -1].forEach(sd => {
+      const z = SZ + sd * 216;
+      bx([SW, 40, 32], [cx, SY1 - 20, z], SM.gold, 'signFace'); bx([SW, 40, 32], [cx, SY0 + 20, z], SM.gold, 'signFace');
+      bx([40, SH - 80, 32], [cx - SW / 2 + 20, cy, z], SM.gold, 'signFace'); bx([40, SH - 80, 32], [cx + SW / 2 - 20, cy, z], SM.gold, 'signFace');
+    });
+    plane(SW, SH, SM.face, [cx, cy, SZ + 201], 'signFace');
+    plane(SW, SH, SM.back, [cx, cy, SZ - 201], 'signFace', Math.PI);
+    add(new THREE.PlaneGeometry(SW, SH), SM.frontGlow, [cx, cy, SZ + 206], null, { flat: true });
+    add(new THREE.PlaneGeometry(SW, SH), SM.rearGlow, [cx, cy, SZ - 206], null, { ry: Math.PI, flat: true });
+    plane(SW, SH, SM.front, [cx, cy, SZ + 236], 'signLetters');
+    plane(SW, SH, SM.rear, [cx, cy, SZ - 236], 'signLetters', Math.PI);
+    for (let i = 0; i < 7; i++) add(new THREE.CylinderGeometry(55, 55, 14, 20), SM.led, [cx - 3000 + i * 1000, SY0 - 30, SZ], 'signLed', { flat: true });
+
+    // crest with the golden palm
+    ctx.count('B30', 219, 'signCrest', 20); ctx.count('B30', 1400, 'signCrest', 2); ctx.count('B30', 300, 'signCrest', 6);
+    add(crestGeo, SM.acp, [cx, SY1 + 30, SZ], 'signCrest');
+    add(rimGeo, SM.gold, [cx, SY1 + 30, SZ], 'signCrest');
+    plane(820, 820, SM.palm, [cx, SY1 + 30 + 300, SZ + 204], 'signCrest');
+    plane(820, 820, SM.palm, [cx, SY1 + 30 + 300, SZ - 204], 'signCrest', Math.PI);
+
+    const light = new THREE.PointLight(0xffd29a, 0, 15000, 1); light.position.set(cx, SY0 - 500, SZ + 1500); G.add(light); SIGN_LIGHTS.push(light);
+    addDim(ctx.dims, [SXL + 550, 0, SZ + 260], [SXL + 550, SY0, SZ + 260], [0, 0, 0], 'زیر تابلو 5200', '#7fe0ff', [-400, 0, 0]);
+    ctx.label([SXL, PTOP + 500, SZ], 'تابلو خوش‌آمد: اسکلت 80×30 + 30×30');
+    ctx.members = keep;
+  }
+
   /* ---------- build all ---------- */
   const BUILD = { A: buildA, B: buildB, C: buildC, D: buildD, E: buildE, F: buildF };
   const CTX = {};
   const OFFS = { A: [0, 0, 0], B: [21000, 0, 0], C: [42000, 0, 0], D: [0, 0, 20000], E: [21000, 0, 20000], F: [42000, 0, 20000] };
   const TAGC = { eco: '#5fd38a', pro: '#c08cff', deco: '#ffb347' };
   OPTIONS.forEach(o => {
-    const ctx = makeCtx(o); BUILD[o.id](ctx); CTX[o.id] = ctx; scene.add(ctx.root);
+    const ctx = makeCtx(o); BUILD[o.id](ctx); welcomeSign(ctx); CTX[o.id] = ctx; scene.add(ctx.root);
     ctx.meshes.forEach(m => m.userData.mat0 = m.material);
     const tag = textSprite(`${o.id} · ${o.kind === 'slide' ? 'ریلی' : 'لولایی'} · ${BADGE[o.budget][1]}`, { color: '#fff', border: TAGC[o.budget], h: 0.022, bold: 800 });
-    tag.position.set(o.center[0], 4700, 0); ctx.root.add(tag); ctx.tagSprite = tag;
+    tag.position.set(o.center[0], 8400, 0); ctx.root.add(tag); ctx.tagSprite = tag;
   });
 
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(600000, 600000), MSM(0x58654c, { metalness: 0, roughness: 1 }));
@@ -861,6 +1049,21 @@ function init() {
     d.onclick = () => selectOpt(o.id, true);
     cards.appendChild(d);
   });
+  function signDetail(ctx, li) {
+    const by = {}; let kg = 0;
+    ctx.signMembers.forEach(m => { const b = by[m.sec] || (by[m.sec] = { n: 0, len: 0 }); b.n++; b.len += m.len; });
+    const rows = Object.entries(by).map(([sec, b]) => {
+      const S = SEC[sec], k = S.kg * b.len / 1000; kg += k;
+      return `<tr><td>🟢 ${S.label}</td><td class="n">${b.n}</td><td class="n">${(b.len / 1000).toFixed(1)} m</td><td class="n">${Math.ceil(b.len * 1.1 / 6000)}</td><td class="n">${Math.round(k)} kg</td></tr>`;
+    }).join('');
+    return `<h3>👑 تابلو سردر «${SIGN_TEXT}»</h3><p>${SIGN.how}</p>
+      <div class="kpi"><div>ارتفاع آزاد زیر تابلو<b>${(SIGN.clear / 1000).toFixed(1)} m</b></div><div>ابعاد تابلو<b>7.5 × 1.6 m</b></div>
+      <div>ارتفاع کل تا نوک تاج<b>≈ 7.5 m</b></div><div>آهن‌آلات تابلو از موجودی<b>≈ ${Math.round(kg)} kg</b></div></div>
+      <table class="bom"><tr><th>مقطع (اسکلت تابلو)</th><th class="n">تعداد</th><th class="n">طول کل</th><th class="n">شاخه 6 m</th><th class="n">وزن</th></tr>${rows}
+      <tr class="tot"><td>جمع تابلو، از موجودی شما</td><td></td><td></td><td></td><td class="n">${Math.round(kg)} kg</td></tr></table>
+      <p class="hint">این وزن جدا از جدول درب بالاست. روی هر بخش تابلو کلیک کنید تا جزئیات آن را ببینید.</p>
+      <h3>خریدنی‌های تابلو (روکش، حروف، نور)</h3><ul>${li(SIGN.buy)}</ul>`;
+  }
   function renderDetail() {
     const o = OPT[state.opt], ctx = CTX[o.id], { by, leafKg } = bom(ctx);
     let stockKg = 0;
@@ -889,7 +1092,7 @@ function init() {
       <h3>یراق‌آلات خریدنی (بدون آهن‌آلات)</h3><ul>${li(o.buy)}</ul>
       <h3>فضای لازم</h3><p>${o.space}</p>
       <h3>✅ مزایا</h3><ul>${li(o.pros)}</ul>
-      <h3>⚠️ معایب</h3><ul>${li(o.cons)}</ul>`;
+      <h3>⚠️ معایب</h3><ul>${li(o.cons)}</ul>${state.sign ? signDetail(ctx, li) : ''}`;
     document.querySelectorAll('.card').forEach(c => c.classList.toggle('sel', c.dataset.opt === state.opt));
     renderSwatches();
   }
@@ -918,7 +1121,7 @@ function init() {
     const ctx = CTX[optId], p = ctx.opt.parts[part]; if (!p) return;
     selected = ctx.meshes.filter(m => m.userData.part === part);
     selected.forEach(m => m.material = M.hl);
-    const ms = ctx.members.filter(m => m.part === part);
+    const ms = ctx.members.concat(ctx.signMembers).filter(m => m.part === part);
     const bySec = {}; ms.forEach(m => { const b = bySec[m.sec] || (bySec[m.sec] = { n: 0, len: 0 }); b.n++; b.len += m.len; });
     const qty = Object.entries(bySec).map(([s, b]) => `${b.n} × ${SEC[s].label} = ${(b.len / 1000).toFixed(1)} m`).join('<br>');
     info.innerHTML = `<button class="x" title="بستن">×</button><h3>${optId} · ${p.name}</h3>
@@ -930,8 +1133,8 @@ function init() {
   /* ---------- layout, views, toggles ---------- */
   let fly = null;
   function presets() {
-    if (state.all) return { iso: { p: [26000, 28000, 62000], t: [22000, 0, 10000] }, front: { p: [22000, 11000, 70000], t: [22000, 1500, 10000] }, inside: { p: [22000, 26000, -45000], t: [22000, 0, 10000] }, top: { p: [22000, 80000, 10010], t: [22000, 0, 10000] }, detail: { p: [26000, 28000, 62000], t: [22000, 0, 10000] } };
-    const o = OPT[state.opt], [cx, cy] = o.center, s = o.span;
+    if (state.all) return { iso: { p: [27000, 33000, 72000], t: [22000, 1500, 10000] }, front: { p: [22000, 12000, 70000], t: [22000, 3000, 10000] }, inside: { p: [22000, 26000, -45000], t: [22000, 0, 10000] }, top: { p: [22000, 80000, 10010], t: [22000, 0, 10000] }, detail: { p: [27000, 33000, 72000], t: [22000, 1500, 10000] } };
+    const o = OPT[state.opt], cx = o.center[0] + (state.sign && o.kind === 'slide' ? 1100 : 0), cy = state.sign ? 3600 : o.center[1], s = o.span * (state.sign ? (o.kind === 'slide' ? 1.12 : 1.25) : 1);
     return {
       iso: { p: [cx + 0.62 * s, 0.26 * s, 0.78 * s], t: [cx, cy, 0] },
       front: { p: [cx, cy + 0.08 * s, 0.9 * s], t: [cx, cy, 0] },
@@ -953,6 +1156,7 @@ function init() {
       ctx.dims.visible = state.dims && !state.all;
       ctx.labels.visible = state.labels;
       ctx.tagSprite.visible = state.all;
+      ctx.sign.visible = state.sign;
     });
     scaleGrp.visible = state.truck && !state.all;
     if (state.all) setShadowBox(22000, 10000, 36000); else setShadowBox(OPT[state.opt].center[0], 1500, 13000);
@@ -968,13 +1172,18 @@ function init() {
     const n = state.night;
     scene.background.copy(n ? NIGHT : DAY); scene.fog.color.copy(n ? NIGHT : DAY);
     hemi.intensity = n ? 0.12 : 0.75; sun.intensity = n ? 0.05 : 0.9; fill.intensity = n ? 0.06 : 0.25;
+    SM.led.emissiveIntensity = n ? 3 : 0.35; SM.front.emissiveIntensity = SM.rear.emissiveIntensity = n ? 0.9 : 0.12;
+    SM.palm.emissiveIntensity = n ? 0.85 : 0.18; SM.frontGlow.opacity = SM.rearGlow.opacity = n ? 0.95 : 0;
+    SM.gold.emissive.setHex(n ? 0x5a3a08 : 0x2e1d02);
+    SIGN_LIGHTS.forEach(l => l.intensity = n ? 1.3 : 0);
   }
   document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => flyTo(b.dataset.view));
   document.querySelectorAll('[data-toggle]').forEach(b => b.onclick = () => {
     const k = b.dataset.toggle; state[k] = !state[k];
     if (k === 'spin') controls.autoRotate = state.spin;
     if (k === 'night') applyNight();
-    layout(); if (k === 'all') flyTo('iso');
+    if (k === 'sign') { select(null); renderDetail(); }
+    layout(); if (k === 'all' || k === 'sign') flyTo(k === 'sign' && !state.all ? 'front' : 'iso');
   });
   const play = document.getElementById('play'), openR = document.getElementById('openR');
   play.onclick = () => { state.target = state.target > 0.5 ? 0 : 1; };
@@ -988,7 +1197,7 @@ function init() {
     const r = renderer.domElement.getBoundingClientRect();
     ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    const pick = []; OPTIONS.forEach(o => { if (CTX[o.id].root.visible) pick.push(...CTX[o.id].meshes); });
+    const pick = []; OPTIONS.forEach(o => { if (CTX[o.id].root.visible) pick.push(...CTX[o.id].meshes.filter(m => state.sign || !m.userData.sign)); });
     const hit = ray.intersectObjects(pick, false)[0];
     if (!hit) return select(null);
     const { opt, part } = hit.object.userData;
@@ -1028,10 +1237,10 @@ function init() {
     renderer.render(scene, camera);
   }
 
-  // deep link: #opt=B&all=1&open=1&view=front&night=1&full=1
+  // deep link: #opt=B&all=1&open=1&view=front&night=1&sign=0&full=1
   const hp = new URLSearchParams(location.hash.slice(1));
   if (hp.get('opt') && OPT[hp.get('opt')]) state.opt = hp.get('opt');
-  ['all', 'dims', 'labels', 'env', 'truck', 'night', 'spin'].forEach(k => { if (hp.has(k)) state[k] = hp.get(k) === '1'; });
+  ['all', 'dims', 'labels', 'env', 'truck', 'night', 'spin', 'sign'].forEach(k => { if (hp.has(k)) state[k] = hp.get(k) === '1'; });
   if (hp.get('open')) state.open = state.target = Math.max(0, Math.min(1, +hp.get('open')));
   if (hp.get('full') === '1') { document.body.classList.add('full'); fsBtn.textContent = '✕'; resize(); }
   controls.autoRotate = state.spin; openR.value = Math.round(state.open * 100);
