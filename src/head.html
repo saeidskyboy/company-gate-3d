@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141925">
+<title>Industrial entrance gate · 4 concepts in 3D</title>
+<meta name="description" content="6 m × 3 m industrial entrance gate: 2 sliding and 2 swing concepts built from L40 angle, 80×30 and 30×30 box. Rotate, open and compare them in 3D.">
+<meta property="og:title" content="🏭 Industrial entrance gate · 4 concepts in 3D">
+<meta property="og:description" content="6 m × 3 m gate: 2 sliding + 2 swing designs, budget and premium. Rotate, open and compare in 3D.">
+<meta property="og:image" content="https://saeidskyboy.github.io/company-gate-3d/preview.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://saeidskyboy.github.io/company-gate-3d/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --bg:#141925; --panel:#1c2232; --line:#2e3750; --txt:#e7ecf7; --mute:#9aa6c0; --acc:#ffd34d; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--txt); font:14px/1.45 system-ui, "Segoe UI", sans-serif; }
+  body { display:flex; }
+  aside { width:410px; min-width:410px; height:100%; overflow-y:auto; background:var(--panel); border-right:1px solid var(--line); padding:14px 16px 40px; }
+  #view { position:relative; flex:1; height:100%; overflow:hidden; }
+  #view canvas { display:block; }
+  h1 { font-size:19px; margin:0 0 2px; } h1 small { display:block; color:var(--mute); font-weight:400; font-size:13px; }
+  h2 { font-size:14px; margin:18px 0 6px; color:var(--acc); text-transform:uppercase; letter-spacing:.04em; }
+  h3 { font-size:13px; margin:12px 0 4px; color:#cfe0ff; }
+  p, li { color:#cdd5e6; } ul, ol { padding-left:18px; margin:6px 0; } li { margin:3px 0; }
+  .btns { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  button { background:#28314a; color:var(--txt); border:1px solid #3b4768; border-radius:7px; padding:6px 10px; cursor:pointer; font:inherit; touch-action:manipulation; }
+  button:hover { background:#33405f; }
+  button.on { background:#3b5a2c; border-color:#6fae4c; }
+  button[data-toggle]::before { content:'☐ '; } button[data-toggle].on::before { content:'☑ '; }
+  #play { min-width:96px; font-weight:600; }
+  input[type=range] { flex:1; min-width:120px; accent-color:var(--acc); }
+  .tag { display:inline-block; font-size:12px; letter-spacing:.04em; color:#1b1b1b; background:linear-gradient(90deg,#ffd34d,#ffb020); border-radius:20px; padding:3px 12px; margin-bottom:6px; font-weight:600; }
+  .hint { color:var(--mute); font-size:12px; }
+  #cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .card { border:1px solid #3b4768; border-radius:10px; padding:8px 10px; cursor:pointer; background:#222a3d; }
+  .card:hover { background:#2a3349; }
+  .card.sel { border-color:var(--acc); background:#33301f; box-shadow:0 0 0 1px var(--acc) inset; }
+  .card .code { font-size:20px; font-weight:800; color:var(--acc); margin-right:6px; }
+  .card .k { font-size:12px; color:#cfe0ff; }
+  .card .t { font-size:12.5px; margin-top:3px; color:#e7ecf7; }
+  .badge { display:inline-block; font-size:11px; border-radius:10px; padding:1px 8px; margin-top:4px; }
+  .eco { background:#21402a; color:#a8f0b8; border:1px solid #3c7a4c; }
+  .pro { background:#3d2a4d; color:#e2c2ff; border:1px solid #7a4fa0; }
+  .sw { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0; }
+  .sw button { padding:4px 8px; font-size:12px; display:flex; align-items:center; gap:6px; }
+  .sw i { display:inline-block; width:14px; height:14px; border-radius:3px; border:1px solid #fff5; }
+  .sw button.on { background:#3a3220; border-color:var(--acc); }
+  table { border-collapse:collapse; width:100%; }
+  .bom td, .bom th { border-bottom:1px solid var(--line); padding:5px 4px; text-align:left; font-size:12.5px; }
+  .bom th { color:var(--mute); font-weight:500; }
+  .bom td.n { text-align:right; color:var(--acc); white-space:nowrap; }
+  .bom tr.tot td { font-weight:700; border-bottom:none; }
+  .kpi { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin:8px 0; }
+  .kpi div { background:#11151f; border:1px solid var(--line); border-radius:8px; padding:6px 8px; font-size:12px; color:var(--mute); }
+  .kpi b { display:block; font-size:16px; color:var(--txt); }
+  .warn { background:#3a2c18; border:1px solid #7a5a2a; border-radius:8px; padding:6px 10px; color:#ffe2b0; font-size:12.5px; margin:8px 0; }
+  #help { transition:opacity .6s; position:absolute; left:12px; top:10px; background:rgba(16,20,30,.78); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-size:12px; color:#c7d0e4; pointer-events:none; }
+  #info { display:none; position:absolute; right:12px; bottom:12px; width:360px; max-height:70%; overflow:auto; background:rgba(22,27,40,.95); border:1px solid #46527a; border-radius:10px; padding:10px 14px; box-shadow:0 8px 30px rgba(0,0,0,.4); }
+  #info h3 { margin:6px 0 4px; font-size:16px; border-left:5px solid var(--acc); padding-left:8px; color:var(--txt); }
+  #info th { text-align:left; color:var(--mute); font-weight:500; padding:2px 8px 2px 0; vertical-align:top; width:80px; }
+  #info td { padding:2px 0; } #info p { margin:6px 0 4px; }
+  #info .x { position:absolute; right:8px; top:6px; padding:0 8px; font-size:18px; }
+  #loading, #err { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--mute); }
+  #err { display:none; color:#ff8a8a; background:#200; padding:20px; white-space:pre-wrap; }
+  #fs { display:none; position:absolute; right:10px; top:10px; z-index:5; padding:6px 11px; font-size:15px; background:rgba(40,49,74,.92); }
+  body.full aside { display:none; }
+  @media (max-width: 900px) and (orientation: portrait), (max-width: 600px) {
+    html, body { overflow:hidden; }
+    body { flex-direction:column; }
+    #view { order:-1; flex:none; height:56vh; height:56dvh; }
+    aside { flex:1; width:100%; min-width:0; height:auto; min-height:0; border-right:none; border-top:1px solid var(--line); padding:10px 14px 40px; }
+    h1 { font-size:17px; }
+    body.full #view { height:100vh; height:100dvh; }
+  }
+  @media (max-height: 520px) and (orientation: landscape) {
+    aside { width:300px; min-width:300px; padding:8px 12px 30px; }
+  }
+  @media (max-width: 900px), (max-height: 520px) {
+    #fs { display:block; }
+    button { padding:9px 12px; }
+    #help { right:62px; font-size:11px; padding:5px 8px; }
+    #info { left:8px; right:8px; bottom:8px; width:auto; max-height:58%; padding:8px 12px; }
+  }
+  @media print {
+    body { display:block; background:#fff; color:#000; } #view, .noprint { display:none !important; }
+    aside { width:100%; min-width:0; height:auto; overflow:visible; background:#fff; border:none; }
+    h2, h3 { color:#000; } p, li, .hint, .bom td.n { color:#000; } .card { background:#fff; }
+  }
+</style>
+</head>
+<body>
+<aside>
+  <div class="tag">🏭 Entrance gate · concept stage</div>
+  <h1>Industrial entrance gate <small>Clear opening 6.0 m · height 3.0 m · all sizes in mm</small></h1>
+  <p class="hint">Pick a concept below. Drag to rotate, scroll / pinch to zoom, right-drag (or 2 fingers) to pan. Click any part to see what it is made of.</p>
+  <div id="cards"></div>
+
+  <div class="noprint">
+    <h2>Gate</h2>
+    <div class="btns"><button id="play">▶ Open</button><input type="range" id="openR" min="0" max="100" value="0" aria-label="open amount"></div>
+    <h2>View</h2>
+    <div class="btns">
+      <button data-view="iso">3/4 street</button>
+      <button data-view="front">Front</button>
+      <button data-view="inside">From inside</button>
+      <button data-view="top">Top</button>
+      <button data-view="detail">Hardware close-up</button>
+    </div>
+    <h2>Show</h2>
+    <div class="btns">
+      <button data-toggle="all">Compare all 4</button>
+      <button data-toggle="dims">Dimensions</button>
+      <button data-toggle="labels">Labels</button>
+      <button data-toggle="env">Fence &amp; road</button>
+      <button data-toggle="truck">Truck &amp; person</button>
+      <button data-toggle="night">Night (LED)</button>
+      <button data-toggle="spin">Auto-rotate</button>
+    </div>
+    <h2>Colour <span class="hint" style="text-transform:none;letter-spacing:0">(selected concept)</span></h2>
+    <div class="hint">Main paint</div><div id="paints" class="sw"></div>
+    <div class="hint">Accent</div><div id="accents" class="sw"></div>
+  </div>
+
+  <div id="detail"></div>
+
+  <h2>Your stock (as I read it)</h2>
+  <ul>
+    <li><b>“L number 4”</b> → equal angle <b>L40×40×4</b> (≈ 2.4 kg/m)</li>
+    <li><b>“8×3” box</b> → rectangular tube <b>80×30</b>, wall ~2 mm (≈ 3.3 kg/m)</li>
+    <li><b>“3×3” box</b> → square tube <b>30×30</b>, wall ~2 mm (≈ 1.8 kg/m)</li>
+  </ul>
+  <p class="hint">Weights and bar counts assume 2 mm walls and 6 m stock bars. If your walls are thicker or thinner, tell me and I'll recalculate.</p>
+  <div class="warn">Concept stage: member sizes are sensible starting points for a 6 × 3 m industrial gate. The contractor (or a structural engineer) should confirm posts, foundations and hardware ratings for your wind zone and soil before building.</div>
+
+  <h2>Next step</h2>
+  <p>Pick a concept (or mix them, e.g. B's slats on a C swing gate). Then I'll prepare the <b>contractor pack</b>: dimensioned shop drawings, a cut list from your 6 m bars, weld and finish spec, foundation sketch and the hardware spec.</p>
+</aside>
+<div id="view">
+  <div id="help">🖱 drag = rotate · scroll = zoom · right-drag = pan · click a part = details</div>
+  <button id="fs" title="Full screen 3D">⤢</button>
+  <div id="info"></div>
+  <div id="loading">Loading 3D…</div>
+  <div id="err"></div>
+</div>

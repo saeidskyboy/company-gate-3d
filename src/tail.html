@@ -1,0 +1,13 @@
+<script>
+window.addEventListener('load', () => {
+  try { init(); }
+  catch (e) {
+    document.getElementById('loading').style.display = 'none';
+    const el = document.getElementById('err'); el.style.display = 'flex';
+    el.textContent = '3D could not start: ' + (e && e.message ? e.message : e) + '\n\nTry a recent Chrome, Edge, Firefox or Safari with WebGL enabled.';
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>
